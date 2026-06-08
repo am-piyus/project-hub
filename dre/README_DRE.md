@@ -40,10 +40,10 @@ Attach **all** of the following files to the AI workspace as its knowledge base:
 | --- | --- |
 | [README_DRE.md](README_DRE.md) | This guide — how the workspace operates. |
 | [PHDS_Template.md](PHDS_Template.md) | The target structure every refined document must follow. |
-| [UPDS_Extraction_Rules.md](UPDS_Extraction_Rules.md) | What the engine keeps, lifts, and strips while refining. |
-| [UPDS_Information_Preservation_Rules.md](UPDS_Information_Preservation_Rules.md) | The knowledge that must never be lost. |
-| [UPDS_Multi_Conversation_Merge_Rules.md](UPDS_Multi_Conversation_Merge_Rules.md) | How to merge several raw files into one history. |
-| [UPDS_Output_Formatting_Rules.md](UPDS_Output_Formatting_Rules.md) | Formatting conventions and the validation checklist. |
+| [UPDS_Extraction_Rules.md](rules_DRE/UPDS_Extraction_Rules.md) | What the engine keeps, lifts, and strips while refining. |
+| [UPDS_Information_Preservation_Rules.md](rules_DRE/UPDS_Information_Preservation_Rules.md) | The knowledge that must never be lost. |
+| [UPDS_Multi_Conversation_Merge_Rules.md](rules_DRE/UPDS_Multi_Conversation_Merge_Rules.md) | How to merge several raw files into one history. |
+| [UPDS_Output_Formatting_Rules.md](rules_DRE/UPDS_Output_Formatting_Rules.md) | Formatting conventions and the validation checklist. |
 
 > **PHDS vs. UPDS.** **PHDS** (`PHDS_Template.md`) is the *target document structure* —
 > the shape of the output. The **UPDS** rule files are the *operating rules* the engine
@@ -59,7 +59,7 @@ Attach **all** of the following files to the AI workspace as its knowledge base:
 - Merges all inputs into one unified project history.
 - Connects related information across the sources.
 - Follows the [PHDS template](PHDS_Template.md) exactly.
-- Preserves all required knowledge ([Preservation Rules](UPDS_Information_Preservation_Rules.md)).
+- Preserves all required knowledge ([Preservation Rules](rules_DRE/UPDS_Information_Preservation_Rules.md)).
 - Is ready for manual refinement — only screenshots, GIFs, and links remain to add.
 
 ## 5. Operating Procedure
@@ -67,11 +67,11 @@ Attach **all** of the following files to the AI workspace as its knowledge base:
 1. **Load** every raw file into the workspace.
 2. **Analyze** all sources together before writing — build a mental timeline.
 3. **Merge** duplicates and resolve conflicts per the
-   [Merge Rules](UPDS_Multi_Conversation_Merge_Rules.md).
+   [Merge Rules](rules_DRE/UPDS_Multi_Conversation_Merge_Rules.md).
 4. **Connect** related items (a decision to the problem it solved, a learning to the
    mistake that produced it).
 5. **Organize** everything into the [PHDS template](PHDS_Template.md) sections.
-6. **Format** per the [Output Formatting Rules](UPDS_Output_Formatting_Rules.md).
+6. **Format** per the [Output Formatting Rules](rules_DRE/UPDS_Output_Formatting_Rules.md).
 7. **Validate** against the checklist in the Output Formatting Rules before delivering.
 
 ## 6. Master Instruction (paste into the workspace)

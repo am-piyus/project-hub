@@ -10,7 +10,7 @@
 
 Refinement reshapes and merges raw extractions. Reshaping is only safe when the
 high-value engineering signal is preserved. These rules name that signal explicitly so
-the [Documentation Refinement Engine](README_DRE.md) can be verified against an objective
+the [Documentation Refinement Engine](../README_DRE.md) can be verified against an objective
 standard.
 
 ## 2. Preservation Priority
@@ -79,8 +79,8 @@ If a MUST-preserve category has no corresponding content across the raw sources:
 - Do **not** delete the section and do **not** fabricate content.
 
 This keeps the PHDS structure stable and makes gaps visible for
-[Manual Refinement](README_DRE.md) (Droplet 0.1.2.3).
+[Manual Refinement](../README_DRE.md) (Droplet 0.1.2.3).
 
 ---
 
-*See also: [README_DRE](README_DRE.md) · [PHDS Template](PHDS_Template.md) · [Extraction Rules](UPDS_Extraction_Rules.md) · [Multi-Conversation Merge Rules](UPDS_Multi_Conversation_Merge_Rules.md) · [Output Formatting Rules](UPDS_Output_Formatting_Rules.md)*
+*See also: [README_DRE](../README_DRE.md) · [PHDS Template](../PHDS_Template.md) · [Extraction Rules](UPDS_Extraction_Rules.md) · [Multi-Conversation Merge Rules](UPDS_Multi_Conversation_Merge_Rules.md) · [Output Formatting Rules](UPDS_Output_Formatting_Rules.md)*

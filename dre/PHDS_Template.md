@@ -12,7 +12,7 @@ shape means every project reads consistently, refinement is mechanical rather th
 creative, and the Publishing Engine can render documents predictably.
 
 The Documentation Refinement Engine MUST emit documents that conform to this template.
-The [Output Formatting Rules](UPDS_Output_Formatting_Rules.md) govern the formatting
+The [Output Formatting Rules](rules_DRE/UPDS_Output_Formatting_Rules.md) govern the formatting
 details; this file defines the **sections and their order**.
 
 ## 2. The Template
@@ -112,4 +112,4 @@ tags: [<project, domain, technology, ...>]
 
 ---
 
-*See also: [README_DRE](README_DRE.md) · [Output Formatting Rules](UPDS_Output_Formatting_Rules.md) · [Information Preservation Rules](UPDS_Information_Preservation_Rules.md)*
+*See also: [README_DRE](README_DRE.md) · [Output Formatting Rules](rules_DRE/UPDS_Output_Formatting_Rules.md) · [Information Preservation Rules](rules_DRE/UPDS_Information_Preservation_Rules.md)*

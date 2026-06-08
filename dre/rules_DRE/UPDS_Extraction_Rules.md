@@ -8,14 +8,14 @@
 
 ## 1. Scope
 
-These rules apply whenever the [Documentation Refinement Engine](README_DRE.md) processes
+These rules apply whenever the [Documentation Refinement Engine](../README_DRE.md) processes
 raw markdown produced by Stage 1
-([Knowledge Extraction Prompt](../prompts/Knowledge_Extraction_Prompt.md)). They define the
+([Knowledge Extraction Prompt](../../prompts/Knowledge_Extraction_Prompt.md)). They define the
 *behavior* of refinement. Companion specifications cover what to keep
 ([Preservation Rules](UPDS_Information_Preservation_Rules.md)), how to combine sources
 ([Merge Rules](UPDS_Multi_Conversation_Merge_Rules.md)), and how to format the result
 ([Output Formatting Rules](UPDS_Output_Formatting_Rules.md)). The target shape is the
-[PHDS Template](PHDS_Template.md).
+[PHDS Template](../PHDS_Template.md).
 
 ## 2. Supported Inputs
 
@@ -43,7 +43,7 @@ Each refinement run must:
 - Drop any conversational noise that survived Stage 1 (see [Removal Rules](#5-information-removal-rules)).
 - Preserve everything required by the [Preservation Rules](UPDS_Information_Preservation_Rules.md).
 - Merge multiple sources per the [Merge Rules](UPDS_Multi_Conversation_Merge_Rules.md).
-- Produce a single, coherent document in the [PHDS](PHDS_Template.md) structure.
+- Produce a single, coherent document in the [PHDS](../PHDS_Template.md) structure.
 
 ## 4. Refinement Rules
 
@@ -59,7 +59,7 @@ Each refinement run must:
 | RR-8 | Consolidate references into the References section; keep links intact. |
 | RR-9 | Express each distinct problem as a Problem → Root Cause → Solution block. |
 | RR-10 | When raw sources conflict, follow the [Merge Rules](UPDS_Multi_Conversation_Merge_Rules.md); never silently pick one. |
-| RR-11 | Organize all output strictly into the [PHDS Template](PHDS_Template.md); keep every section. |
+| RR-11 | Organize all output strictly into the [PHDS Template](../PHDS_Template.md); keep every section. |
 | RR-12 | Output valid markdown only — no commentary, no meta-explanation of the refinement itself. |
 
 ## 5. Information Removal Rules
@@ -110,9 +110,9 @@ Refined PHDS markdown
 
 - The engine does **not** re-read original conversations — it refines Stage 1 raw output.
 - The engine does **not** insert screenshots, GIFs, or Obsidian links — that is
-  [Manual Refinement](README_DRE.md) (Droplet 0.1.2.3).
+  [Manual Refinement](../README_DRE.md) (Droplet 0.1.2.3).
 - The engine does **not** publish — that is the Publishing Engine (Bucket 0.1.5).
 
 ---
 
-*See also: [README_DRE](README_DRE.md) · [PHDS Template](PHDS_Template.md) · [Information Preservation Rules](UPDS_Information_Preservation_Rules.md) · [Multi-Conversation Merge Rules](UPDS_Multi_Conversation_Merge_Rules.md) · [Output Formatting Rules](UPDS_Output_Formatting_Rules.md)*
+*See also: [README_DRE](../README_DRE.md) · [PHDS Template](../PHDS_Template.md) · [Information Preservation Rules](UPDS_Information_Preservation_Rules.md) · [Multi-Conversation Merge Rules](UPDS_Multi_Conversation_Merge_Rules.md) · [Output Formatting Rules](UPDS_Output_Formatting_Rules.md)*

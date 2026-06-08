@@ -9,7 +9,7 @@
 ## 1. When These Rules Apply
 
 These rules apply whenever **more than one raw file** is loaded into the
-[Documentation Refinement Engine](README_DRE.md): several conversations, several AI systems
+[Documentation Refinement Engine](../README_DRE.md): several conversations, several AI systems
 (ChatGPT + Claude + Gemini), or a conversation plus notes, logs, or forum threads. With a
 single raw file, only the [Extraction Rules](UPDS_Extraction_Rules.md) apply.
 
@@ -87,4 +87,4 @@ This keeps the document both correct (current) and instructive (the path).
 
 ---
 
-*See also: [README_DRE](README_DRE.md) · [PHDS Template](PHDS_Template.md) · [Extraction Rules](UPDS_Extraction_Rules.md) · [Information Preservation Rules](UPDS_Information_Preservation_Rules.md) · [Output Formatting Rules](UPDS_Output_Formatting_Rules.md)*
+*See also: [README_DRE](../README_DRE.md) · [PHDS Template](../PHDS_Template.md) · [Extraction Rules](UPDS_Extraction_Rules.md) · [Information Preservation Rules](UPDS_Information_Preservation_Rules.md) · [Output Formatting Rules](UPDS_Output_Formatting_Rules.md)*

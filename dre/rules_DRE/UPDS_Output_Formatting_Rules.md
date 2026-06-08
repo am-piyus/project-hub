@@ -11,13 +11,13 @@
 The refined output **MUST**:
 
 - Be valid markdown.
-- Follow the [PHDS Template](PHDS_Template.md) structure exactly.
+- Follow the [PHDS Template](../PHDS_Template.md) structure exactly.
 - Be directly pasteable into Obsidian with no restructuring.
 - Require only minimal manual refinement (adding screenshots, GIFs, links).
 - Be suitable for future website publishing.
 - Be understandable **without** the original conversations or raw files.
 
-> **Structure vs. formatting.** The [PHDS Template](PHDS_Template.md) defines *which
+> **Structure vs. formatting.** The [PHDS Template](../PHDS_Template.md) defines *which
 > sections* exist and *in what order*. This document defines *how the content inside them
 > is formatted*.
 
@@ -57,7 +57,7 @@ Each entry under **Problems & Solutions** uses this block so the chain is never 
 ## 5. Validation Checklist
 
 Every refined document must pass this checklist before delivery. The
-[Documentation Refinement Engine](README_DRE.md) runs it as a final self-check.
+[Documentation Refinement Engine](../README_DRE.md) runs it as a final self-check.
 
 ### 5.1 Structure
 
@@ -90,4 +90,4 @@ Every refined document must pass this checklist before delivery. The
 
 ---
 
-*See also: [README_DRE](README_DRE.md) · [PHDS Template](PHDS_Template.md) · [Extraction Rules](UPDS_Extraction_Rules.md) · [Information Preservation Rules](UPDS_Information_Preservation_Rules.md) · [Multi-Conversation Merge Rules](UPDS_Multi_Conversation_Merge_Rules.md)*
+*See also: [README_DRE](../README_DRE.md) · [PHDS Template](../PHDS_Template.md) · [Extraction Rules](UPDS_Extraction_Rules.md) · [Information Preservation Rules](UPDS_Information_Preservation_Rules.md) · [Multi-Conversation Merge Rules](UPDS_Multi_Conversation_Merge_Rules.md)*
