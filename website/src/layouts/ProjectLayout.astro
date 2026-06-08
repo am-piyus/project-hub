@@ -1,0 +1,40 @@
+---
+// Minimal project page shell. Styling and full website chrome are out of scope for this
+// droplet (Markdown Rendering Pipeline) and arrive with the Website Interface (Bucket 0.1.4).
+interface Props {
+  title: string;
+  data: {
+    status?: string;
+    tags?: string[];
+  };
+}
+
+const { title, data } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · Project Hub</title>
+  </head>
+  <body>
+    <main>
+      <p><a href="/">← All projects</a></p>
+      <article>
+        <header>
+          <h1>{title}</h1>
+          {data.status && <p><strong>Status:</strong> {data.status}</p>}
+          {
+            data.tags && data.tags.length > 0 && (
+              <p><strong>Tags:</strong> {data.tags.join(', ')}</p>
+            )
+          }
+        </header>
+        <!-- Rendered PHDS markdown -->
+        <slot />
+      </article>
+    </main>
+  </body>
+</html>

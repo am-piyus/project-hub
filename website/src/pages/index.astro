@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+
+// Project index — discovers every project rendered from content/.
+const projects = (await getCollection('projects')).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title),
+);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Project Hub</title>
+  </head>
+  <body>
+    <main>
+      <h1>Project Hub</h1>
+      <p>Engineering project documentation, published from <code>content/</code>.</p>
+
+      {
+        projects.length === 0 ? (
+          <p>No projects published yet.</p>
+        ) : (
+          <ul>
+            {projects.map((project) => (
+              <li>
+                <a href={`/projects/${project.id}`}>{project.data.title}</a>
+                {project.data.status && <span> — {project.data.status}</span>}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </main>
+  </body>
+</html>
