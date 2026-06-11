@@ -3,26 +3,69 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Container from '../components/Container.astro';
 import Section from '../components/Section.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import Tag from '../components/Tag.astro';
 import { buildContentIndex } from '../lib/content-index';
 
-// Metadata-driven project listing on the design system.
-// The full landing experience (hero, overviews, portfolio intro) is Droplet 0.1.4.2.
-const { projects, count } = await buildContentIndex();
+// Homepage — the primary entry point of Project Hub (Droplet 0.1.4.2).
+// A living engineering knowledge gateway, not a marketing landing page:
+// hero → recent projects → knowledge library (future-ready) → portfolio intro.
+// All dynamic content comes from the Publishing Engine's content index.
+const { projects, count, tags } = await buildContentIndex();
+
+// Recent projects — newest sealed (then started) first; undated work sorts last.
+const sortKey = (p: (typeof projects)[number]) =>
+  p.dateSealed && p.dateSealed !== 'unknown'
+    ? p.dateSealed
+    : p.dateStarted && p.dateStarted !== 'unknown'
+      ? p.dateStarted
+      : '';
+const recentProjects = [...projects]
+  .sort((a, b) => sortKey(b).localeCompare(sortKey(a)))
+  .slice(0, 6);
+
+const topicCount = Object.keys(tags).length;
+
+// Disciplines explored — portfolio introduction (full portfolio page: 0.1.4.5).
+const disciplines = ['Robotics', 'Embedded Systems', 'Electronics', 'Mechatronics', 'Engineering Learning'];
 ---
 
-<BaseLayout title="Project Hub">
+<BaseLayout
+  title="Project Hub"
+  description="Engineering projects, debugging journeys, and lessons learned — documented from real work and published as a knowledge base."
+>
   <Container>
+    <!-- Hero — what this is, why it exists, what lives here -->
+    <section class="hero">
+      <p class="eyebrow">Engineering knowledge, preserved</p>
+      <h1>I build things, document them properly,<br /> and publish the lessons learned.</h1>
+      <p class="mission">
+        Project Hub is a public engineering notebook — projects, debugging journeys, and
+        technical knowledge extracted from real build sessions and preserved as structured
+        documentation. Not a blog. Not a brochure. The complete path, including the
+        mistakes.
+      </p>
+      <p class="actions">
+        <a class="button primary" href="#projects">Browse projects</a>
+        <a class="button" href="#about">About this site</a>
+      </p>
+      <p class="stats" aria-label="Site statistics">
+        <strong>{count}</strong> project{count === 1 ? '' : 's'} ·
+        <strong>{topicCount}</strong> topics · knowledge library — growing
+      </p>
+    </section>
+
+    <!-- Recent projects — dynamic from the Publishing Engine content index -->
     <div id="projects">
       <Section
-        title="Projects"
-        description={`${count} engineering project${count === 1 ? '' : 's'} — documented, preserved, and published from Obsidian.`}
+        title="Recent Projects"
+        description="Engineering work, documented end to end — objectives, decisions, failures, and fixes."
       >
         {
-          projects.length === 0 ? (
+          recentProjects.length === 0 ? (
             <p>No projects published yet.</p>
           ) : (
             <div class="grid">
-              {projects.map((project) => (
+              {recentProjects.map((project) => (
                 <ProjectCard project={project} />
               ))}
             </div>
@@ -30,10 +73,118 @@ const { projects, count } = await buildContentIndex();
         }
       </Section>
     </div>
+
+    <!-- Knowledge library — future-ready (populated by Droplet 0.1.4.4) -->
+    <Section
+      title="Knowledge Library"
+      description="Standalone engineering knowledge — concepts, techniques, and references extracted from project work."
+    >
+      <div class="placeholder">
+        <p>
+          The knowledge library is being seeded. Articles distilled from project
+          documentation — debugging patterns, tool configurations, and hard-won lessons —
+          will be published here.
+        </p>
+      </div>
+    </Section>
+
+    <!-- Portfolio introduction — who builds this and why it's published -->
+    <div id="about">
+      <Section title="Behind the Projects">
+        <div class="about-panel">
+          <p>
+            Project Hub is built by an engineer documenting the path through robotics,
+            embedded systems, and mechatronics — one project at a time. Every project here
+            was first <em>built</em>, then <em>documented</em>: the objectives, the
+            decisions, the failures, the root causes, and the fixes.
+          </p>
+          <p>
+            The documentation is published because the lessons are more useful shared than
+            trapped in chat history — and because the best record of engineering skill is
+            the work itself, reasoning included.
+          </p>
+          <p class="disciplines">
+            {disciplines.map((d) => <Tag label={d} />)}
+          </p>
+        </div>
+      </Section>
+    </div>
   </Container>
 </BaseLayout>
 
 <style>
+  /* Hero */
+  .hero {
+    padding: var(--space-12) 0 var(--space-16);
+    max-width: 56rem;
+  }
+
+  .eyebrow {
+    color: var(--color-primary);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-3);
+  }
+
+  .hero h1 {
+    margin-bottom: var(--space-4);
+  }
+
+  .mission {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    max-width: 44rem;
+    margin-bottom: var(--space-6);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .button {
+    display: inline-block;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius);
+    border: 1px solid var(--color-border-strong);
+    color: var(--color-text);
+    background: var(--color-surface);
+  }
+
+  .button:hover {
+    text-decoration: none;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .button.primary {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #ffffff;
+  }
+
+  .button.primary:hover {
+    background: var(--color-primary-strong);
+    color: #ffffff;
+  }
+
+  .stats {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    margin: 0;
+  }
+
+  .stats strong {
+    color: var(--color-text);
+  }
+
+  /* Project grid — 1 → 2 → 3 columns */
   .grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -50,5 +201,40 @@ const { projects, count } = await buildContentIndex();
     .grid {
       grid-template-columns: repeat(3, 1fr);
     }
+  }
+
+  /* Knowledge placeholder — structured for future growth */
+  .placeholder {
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius);
+    padding: var(--space-6);
+    background: var(--color-surface);
+  }
+
+  .placeholder p {
+    color: var(--color-text-secondary);
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  /* Portfolio introduction */
+  .about-panel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-6);
+    max-width: 56rem;
+  }
+
+  .about-panel p {
+    color: var(--color-text-secondary);
+    max-width: 65ch;
+  }
+
+  .disciplines {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: var(--space-4) 0 0;
   }
 </style>
