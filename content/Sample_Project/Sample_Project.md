@@ -88,3 +88,5 @@ Not documented in source conversations.
 
 - Resource processing, wikilink resolution, metadata/URL generation, and search arrive in
   later droplets of Bucket 0.1.3 and Bucket 0.1.5.
+- Continue with [[Project_02_PWM_Output|the PWM output project]] for cross-project
+  navigation. See also [[Project_02_PWM_Output]].
