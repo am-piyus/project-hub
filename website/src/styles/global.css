@@ -74,6 +74,39 @@
   --shadow-card: 0 1px 2px rgb(15 23 42 / 0.05);
 
   /* Breakpoints (reference): 40rem tablet, 64rem desktop */
+
+  color-scheme: light;
+}
+
+/* Dark theme — token swap only (Droplet 0.1.4.3). Applied via data-theme, set
+   pre-paint from localStorage / prefers-color-scheme by BaseLayout's init script. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-surface-alt: #2c3a50;
+  --color-border: #334155;
+  --color-border-strong: #475569;
+
+  --color-text: #f1f5f9;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+
+  --color-primary: #60a5fa;
+  --color-primary-strong: #93c5fd;
+  --color-primary-subtle: #172554;
+
+  --color-status-completed: #86efac;
+  --color-status-completed-bg: #052e16;
+  --color-status-progress: #fcd34d;
+  --color-status-progress-bg: #451a03;
+  --color-status-sealed: #93c5fd;
+  --color-status-sealed-bg: #172554;
+  --color-status-planned: #cbd5e1;
+  --color-status-planned-bg: #334155;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4);
 }
 
 /* --------------------------------------------------------------------------
@@ -85,6 +118,13 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+}
+
+/* Reading: smooth in-page navigation (TOC, anchors) for those who allow motion */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
@@ -214,6 +254,13 @@ hr {
 
 .prose h3 {
   margin-top: var(--space-8);
+}
+
+/* Anchored headings land below the sticky header */
+.prose h2,
+.prose h3,
+.prose h4 {
+  scroll-margin-top: 4.5rem;
 }
 
 .prose ul,

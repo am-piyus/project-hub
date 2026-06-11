@@ -1,31 +1,70 @@
 ---
-// Project page shell — design-system layout for a rendered PHDS document:
-// breadcrumb-style back link, title, metadata block, then documentation prose.
-// Deeper project-page UX (readability refinements) is Droplet 0.1.4.3.
+// Project page shell — the core reading experience for a PHDS document
+// (Droplet 0.1.4.3): breadcrumb-style back link, title, metadata block with
+// reading time, a sticky table-of-contents sidebar (desktop) with scroll-spy,
+// the documentation prose, and previous/next project navigation.
+import type { MarkdownHeading } from 'astro';
 import BaseLayout from './BaseLayout.astro';
 import Container from '../components/Container.astro';
 import MetadataBlock from '../components/MetadataBlock.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 import type { ProjectMetadata } from '../lib/metadata';
 
 interface Props {
   project: ProjectMetadata;
+  headings?: MarkdownHeading[];
+  readingMinutes?: number;
+  prev?: ProjectMetadata;
+  next?: ProjectMetadata;
 }
 
-const { project } = Astro.props;
+const { project, headings = [], readingMinutes, prev, next } = Astro.props;
+const description = project.summary ?? `${project.title} — engineering project documentation.`;
 ---
 
-<BaseLayout title={project.title} description={`${project.title} — engineering project documentation.`}>
-  <Container width="content">
-    <p class="back"><a href="/#projects">← All projects</a></p>
-    <article>
-      <header>
-        <h1>{project.title}</h1>
-        <MetadataBlock project={project} />
-      </header>
-      <div class="prose">
-        <slot />
-      </div>
-    </article>
+<BaseLayout title={project.title} description={description}>
+  <Container>
+    <p class="back"><a href="/projects">← All projects</a></p>
+    <div class="page">
+      <TableOfContents headings={headings} />
+      <article id="doc">
+        <header>
+          <h1>{project.title}</h1>
+          {readingMinutes && (
+            <p class="reading-time">{readingMinutes} min read</p>
+          )}
+          <MetadataBlock project={project} />
+        </header>
+        <div class="prose">
+          <slot />
+        </div>
+        <footer class="doc-footer">
+          <p class="top"><a href="#main">↑ Back to top</a></p>
+          {
+            (prev || next) && (
+              <nav class="project-nav" aria-label="Project navigation">
+                {prev ? (
+                  <a class="nav-card" href={prev.url} rel="prev">
+                    <span class="dir">← Newer</span>
+                    <span class="name">{prev.title}</span>
+                  </a>
+                ) : (
+                  <span />
+                )}
+                {next ? (
+                  <a class="nav-card next" href={next.url} rel="next">
+                    <span class="dir">Older →</span>
+                    <span class="name">{next.title}</span>
+                  </a>
+                ) : (
+                  <span />
+                )}
+              </nav>
+            )
+          }
+        </footer>
+      </article>
+    </div>
   </Container>
 </BaseLayout>
 
@@ -40,6 +79,95 @@ const { project } = Astro.props;
   }
 
   .back a:hover {
+    color: var(--color-primary);
+  }
+
+  /* Two-column reading layout: sticky TOC left, document right (desktop) */
+  .page {
+    display: block;
+  }
+
+  @media (min-width: 64rem) {
+    .page {
+      display: grid;
+      grid-template-columns: 15rem minmax(0, var(--width-content));
+      gap: var(--space-12);
+      justify-content: center;
+    }
+  }
+
+  article {
+    max-width: var(--width-content);
+    margin: 0 auto;
+  }
+
+  @media (min-width: 64rem) {
+    article {
+      margin: 0;
+    }
+  }
+
+  .reading-time {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    margin: calc(-1 * var(--space-2)) 0 0;
+  }
+
+  .doc-footer {
+    margin-top: var(--space-12);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .top {
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-4);
+  }
+
+  .top a {
+    color: var(--color-text-secondary);
+  }
+
+  .project-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  .nav-card {
+    display: block;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .nav-card:hover {
+    text-decoration: none;
+    border-color: var(--color-primary);
+  }
+
+  .nav-card.next {
+    text-align: right;
+  }
+
+  .dir {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-1);
+  }
+
+  .name {
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .nav-card:hover .name {
     color: var(--color-primary);
   }
 </style>

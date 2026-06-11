@@ -5,6 +5,7 @@ import Section from '../components/Section.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Tag from '../components/Tag.astro';
 import { buildContentIndex } from '../lib/content-index';
+import { sortByRecency } from '../lib/metadata';
 
 // Homepage — the primary entry point of Project Hub (Droplet 0.1.4.2).
 // A living engineering knowledge gateway, not a marketing landing page:
@@ -12,16 +13,8 @@ import { buildContentIndex } from '../lib/content-index';
 // All dynamic content comes from the Publishing Engine's content index.
 const { projects, count, tags } = await buildContentIndex();
 
-// Recent projects — newest sealed (then started) first; undated work sorts last.
-const sortKey = (p: (typeof projects)[number]) =>
-  p.dateSealed && p.dateSealed !== 'unknown'
-    ? p.dateSealed
-    : p.dateStarted && p.dateStarted !== 'unknown'
-      ? p.dateStarted
-      : '';
-const recentProjects = [...projects]
-  .sort((a, b) => sortKey(b).localeCompare(sortKey(a)))
-  .slice(0, 6);
+// Recent projects — newest first; undated work sorts last.
+const recentProjects = sortByRecency(projects).slice(0, 6);
 
 const topicCount = Object.keys(tags).length;
 
@@ -45,7 +38,7 @@ const disciplines = ['Robotics', 'Embedded Systems', 'Electronics', 'Mechatronic
         mistakes.
       </p>
       <p class="actions">
-        <a class="button primary" href="#projects">Browse projects</a>
+        <a class="button primary" href="/projects">Browse projects</a>
         <a class="button" href="#about">About this site</a>
       </p>
       <p class="stats" aria-label="Site statistics">
@@ -64,11 +57,16 @@ const disciplines = ['Robotics', 'Embedded Systems', 'Electronics', 'Mechatronic
           recentProjects.length === 0 ? (
             <p>No projects published yet.</p>
           ) : (
-            <div class="grid">
-              {recentProjects.map((project) => (
-                <ProjectCard project={project} />
-              ))}
-            </div>
+            <>
+              <div class="grid">
+                {recentProjects.map((project) => (
+                  <ProjectCard project={project} />
+                ))}
+              </div>
+              <p class="all-link">
+                <a href="/projects">All projects →</a>
+              </p>
+            </>
           )
         }
       </Section>
@@ -201,6 +199,12 @@ const disciplines = ['Robotics', 'Embedded Systems', 'Electronics', 'Mechatronic
     .grid {
       grid-template-columns: repeat(3, 1fr);
     }
+  }
+
+  .all-link {
+    margin: var(--space-4) 0 0;
+    font-size: var(--text-sm);
+    font-weight: 600;
   }
 
   /* Knowledge placeholder — structured for future growth */

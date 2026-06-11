@@ -25,6 +25,19 @@ const fullTitle = title === 'Project Hub' ? title : `${title} · Project Hub`;
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <title>{fullTitle}</title>
+    <!-- Theme init — runs before paint so the chosen theme never flashes.
+         Stored preference wins; otherwise follow the system color scheme. -->
+    <script is:inline>
+      (() => {
+        let theme = 'light';
+        try {
+          theme =
+            localStorage.getItem('theme') ??
+            (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        } catch {}
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

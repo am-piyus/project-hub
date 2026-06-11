@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { buildContentIndex } from '../../lib/content-index';
+import { sortByRecency } from '../../lib/metadata';
+
+// Project listing — the central place to discover all published projects
+// (Droplet 0.1.4.3). Metadata-driven from the content index, newest first.
+const { projects, count } = await buildContentIndex();
+const ordered = sortByRecency(projects);
+---
+
+<BaseLayout
+  title="Projects"
+  description="All engineering projects — documented end to end: objectives, decisions, failures, root causes, and fixes."
+>
+  <Container>
+    <Section
+      title="Projects"
+      description={`${count} engineering project${count === 1 ? '' : 's'}, documented end to end and published from Obsidian. Newest first.`}
+    >
+      {
+        ordered.length === 0 ? (
+          <p>No projects published yet.</p>
+        ) : (
+          <div class="grid">
+            {ordered.map((project) => (
+              <ProjectCard project={project} />
+            ))}
+          </div>
+        )
+      }
+    </Section>
+  </Container>
+</BaseLayout>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 40rem) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
