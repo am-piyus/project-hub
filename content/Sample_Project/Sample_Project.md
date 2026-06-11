@@ -18,6 +18,14 @@ tags: [sample, project-hub, pipeline]
 This page proves the publishing engine can discover a project folder under `content/`,
 parse its PHDS markdown, and render it as a routed webpage at `/projects/Sample_Project`.
 
+![Sample image](images/sample_01.png)
+*A 1×1 PNG from `images/` — verifies image resource resolution.*
+
+![Sample demo](gifs/sample_demo.gif)
+*A GIF from `gifs/` — verifies animated-resource resolution.*
+
+Download the [sample notes](files/sample_notes.txt) — verifies downloadable files from `files/`.
+
 ## Objectives
 
 - Verify markdown discovery from `content/`.

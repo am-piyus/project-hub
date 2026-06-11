@@ -1,5 +1,7 @@
 # build output
 dist/
+# generated resource mirror (synced from repo-root content/ by the project-resources integration)
+public/projects/
 # generated types
 .astro/
 # dependencies
