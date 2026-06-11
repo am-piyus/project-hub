@@ -37,6 +37,9 @@ const projects = defineCollection({
     sources: z.array(z.string()).optional(),
     ai_systems: z.array(z.string()).optional(),
     tags: z.array(z.string()).optional(),
+    // Portfolio curation (Droplet 0.1.4.5): featured projects surface in the
+    // portfolio's Featured Work section. One of 0.1.3.5's reserved future fields.
+    featured: z.boolean().optional(),
   }),
 });
 

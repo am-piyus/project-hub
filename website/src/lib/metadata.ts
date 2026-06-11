@@ -22,6 +22,8 @@ export interface ProjectMetadata {
   tags: string[];
   sources: string[];
   aiSystems: string[];
+  /** Surfaced in the portfolio's Featured Work section (Droplet 0.1.4.5). */
+  featured: boolean;
 }
 
 /** Extract the document summary — the first blockquote in the markdown body
@@ -58,6 +60,7 @@ export function extractMetadata(entry: CollectionEntry<'projects'>): ProjectMeta
     tags: data.tags ?? [],
     sources: data.sources ?? [],
     aiSystems: data.ai_systems ?? [],
+    featured: data.featured ?? false,
   };
 }
 
