@@ -1,10 +1,8 @@
 ---
-import { getCollection } from 'astro:content';
+import { buildContentIndex } from '../lib/content-index';
 
-// Project index — discovers every project rendered from content/.
-const projects = (await getCollection('projects')).sort((a, b) =>
-  a.data.title.localeCompare(b.data.title),
-);
+// Metadata-driven project listing — rendered from the generated content index.
+const { projects, count } = await buildContentIndex();
 ---
 
 <!doctype html>
@@ -17,7 +15,7 @@ const projects = (await getCollection('projects')).sort((a, b) =>
   <body>
     <main>
       <h1>Project Hub</h1>
-      <p>Engineering project documentation, published from <code>content/</code>.</p>
+      <p>{count} project{count === 1 ? '' : 's'} published from <code>content/</code>.</p>
 
       {
         projects.length === 0 ? (
@@ -26,8 +24,9 @@ const projects = (await getCollection('projects')).sort((a, b) =>
           <ul>
             {projects.map((project) => (
               <li>
-                <a href={`/projects/${project.id}`}>{project.data.title}</a>
-                {project.data.status && <span> — {project.data.status}</span>}
+                <a href={project.url}>{project.title}</a>
+                <span> — {project.status}</span>
+                {project.tags.length > 0 && <span> · {project.tags.slice(0, 5).join(', ')}</span>}
               </li>
             ))}
           </ul>

@@ -27,11 +27,11 @@ const projects = defineCollection({
     // id = the project folder name (first path segment), preserving its exact casing.
     generateId: ({ entry }) => entry.split('/')[0],
   }),
-  // PHDS frontmatter (dre/PHDS_Template.md). Only `title` is required so a project page
-  // still renders while documentation is in progress.
+  // PHDS frontmatter (dre/PHDS_Template.md). `title` and `status` are the required
+  // metadata fields; the rest are optional and default sensibly during extraction.
   schema: z.object({
     title: z.string(),
-    status: z.string().optional(),
+    status: z.string(),
     date_started: phdsDate,
     date_sealed: phdsDate,
     sources: z.array(z.string()).optional(),
