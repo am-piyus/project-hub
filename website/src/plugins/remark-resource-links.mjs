@@ -1,15 +1,22 @@
-// Remark plugin — keep project resource embeds portable.
+// Remark plugin — make project resource embeds portable and trailing-slash-proof.
 //
-// By default Astro's `astro:assets` pipeline optimizes relative markdown images, rewriting
-// `images/x.png` → `/_astro/x.HASH.webp` and (critically) converting animated GIFs to a
-// single-frame WebP. For Project Hub we want every resource served unchanged from its
-// project-relative path (see the `project-resources` integration, which mirrors the folders
-// into the build). This plugin converts `images/` and `gifs/` image embeds into literal
-// `<img>` HTML nodes — which the assets pipeline leaves untouched — so GIFs stay animated
-// and paths stay portable.
+// Two jobs:
+//   1. Bypass astro:assets for `images/` and `gifs/` embeds (which would optimize images
+//      and, critically, flatten animated GIFs to a single WebP frame). We emit literal
+//      <img> HTML instead, so resources ship unchanged from the project-relative mirror.
+//   2. Resolve every resource reference (images, gifs, files) to an ABSOLUTE URL rooted at
+//      the project route: `/projects/<Project>/<dir>/<file>`.
 //
-// File links (`[label](files/x.zip)`) are already emitted as literal relative hrefs by
-// Astro, so they need no transformation here.
+// Why absolute: project pages are served without a trailing slash (e.g.
+// `/projects/Sample_Project`), so a page-relative `images/x.png` resolves one level too
+// high (`/projects/images/x.png` → 404). An absolute `/projects/<Project>/images/x.png`
+// resolves correctly regardless of trailing slash, in dev, build, and preview. This matches
+// the rest of the site, which already uses root-absolute internal links.
+//
+// The project slug is the markdown file's parent folder name
+// (`content/<Project>/<Project>.md`), which equals the project route slug.
+
+import path from 'node:path';
 
 const RESOURCE_RE = /^(?:\.\/)?(?:images|gifs|files)\//;
 
@@ -21,11 +28,22 @@ function escapeAttr(value = '') {
     .replace(/>/g, '&gt;');
 }
 
-function walk(node) {
+function projectSlug(file) {
+  const filePath = file?.path ?? file?.history?.[file.history.length - 1];
+  return filePath ? path.basename(path.dirname(filePath)) : null;
+}
+
+function toAbsolute(url, slug) {
+  const clean = url.replace(/^\.\//, '');
+  // Fall back to the original relative URL if the slug could not be determined.
+  return slug ? `/projects/${slug}/${clean}` : clean;
+}
+
+function walk(node, slug) {
   if (!node || !Array.isArray(node.children)) return;
   node.children = node.children.map((child) => {
     if (child.type === 'image' && typeof child.url === 'string' && RESOURCE_RE.test(child.url)) {
-      const src = child.url.replace(/^\.\//, '');
+      const src = toAbsolute(child.url, slug);
       const alt = escapeAttr(child.alt ?? '');
       const title = child.title ? ` title="${escapeAttr(child.title)}"` : '';
       return {
@@ -33,11 +51,16 @@ function walk(node) {
         value: `<img src="${src}" alt="${alt}"${title} loading="lazy" decoding="async">`,
       };
     }
-    walk(child);
+    if (child.type === 'link' && typeof child.url === 'string' && RESOURCE_RE.test(child.url)) {
+      child.url = toAbsolute(child.url, slug);
+      walk(child, slug);
+      return child;
+    }
+    walk(child, slug);
     return child;
   });
 }
 
 export default function remarkResourceLinks() {
-  return (tree) => walk(tree);
+  return (tree, file) => walk(tree, projectSlug(file));
 }
