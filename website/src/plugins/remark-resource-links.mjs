@@ -28,22 +28,29 @@ function escapeAttr(value = '') {
     .replace(/>/g, '&gt;');
 }
 
-function projectSlug(file) {
+function resolveBase(file) {
   const filePath = file?.path ?? file?.history?.[file.history.length - 1];
-  return filePath ? path.basename(path.dirname(filePath)) : null;
+  if (!filePath) return null;
+  const slug = path.basename(path.dirname(filePath));
+  // The content root the document lives in decides its URL namespace:
+  //   <repo>/content/<slug>/…   → /projects/<slug>
+  //   <repo>/knowledge/<slug>/… → /knowledge/<slug>   (Droplet 0.1.4.4)
+  const root = path.basename(path.dirname(path.dirname(filePath)));
+  const segment = root === 'knowledge' ? 'knowledge' : 'projects';
+  return `/${segment}/${slug}`;
 }
 
-function toAbsolute(url, slug) {
+function toAbsolute(url, base) {
   const clean = url.replace(/^\.\//, '');
-  // Fall back to the original relative URL if the slug could not be determined.
-  return slug ? `/projects/${slug}/${clean}` : clean;
+  // Fall back to the original relative URL if the base could not be determined.
+  return base ? `${base}/${clean}` : clean;
 }
 
-function walk(node, slug) {
+function walk(node, base) {
   if (!node || !Array.isArray(node.children)) return;
   node.children = node.children.map((child) => {
     if (child.type === 'image' && typeof child.url === 'string' && RESOURCE_RE.test(child.url)) {
-      const src = toAbsolute(child.url, slug);
+      const src = toAbsolute(child.url, base);
       const alt = escapeAttr(child.alt ?? '');
       const title = child.title ? ` title="${escapeAttr(child.title)}"` : '';
       return {
@@ -52,15 +59,15 @@ function walk(node, slug) {
       };
     }
     if (child.type === 'link' && typeof child.url === 'string' && RESOURCE_RE.test(child.url)) {
-      child.url = toAbsolute(child.url, slug);
-      walk(child, slug);
+      child.url = toAbsolute(child.url, base);
+      walk(child, base);
       return child;
     }
-    walk(child, slug);
+    walk(child, base);
     return child;
   });
 }
 
 export default function remarkResourceLinks() {
-  return (tree, file) => walk(tree, projectSlug(file));
+  return (tree, file) => walk(tree, resolveBase(file));
 }

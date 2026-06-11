@@ -15,7 +15,7 @@ const phdsDate = z
 // app — authored per the Obsidian Storage Structure (workflow/Obsidian_Storage_Structure.md):
 //
 //   content/<Project_Name>/<Project_Name>.md   ← the page
-//   content/<Project_Name>/images|gifs|files/  ← resources (later droplets)
+//   content/<Project_Name>/images|gifs|files/  ← resources
 //
 // The content-layer `glob()` loader reads that markdown directly, so `content/` stays the
 // single source of truth (no copying into the Astro app). The project folder name becomes
@@ -40,4 +40,26 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { projects };
+// Knowledge articles live in the repo-root `knowledge/` directory, mirroring the
+// project storage structure (knowledge/<Article>/<Article>.md + images|gifs|files/).
+// Knowledge answers "what was learned / what concepts matter"; projects answer
+// "what was built". Routes render at /knowledge/<Article> (Droplet 0.1.4.4).
+const knowledge = defineCollection({
+  loader: glob({
+    pattern: '**/*.md',
+    base: '../knowledge',
+    generateId: ({ entry }) => entry.split('/')[0],
+  }),
+  schema: z.object({
+    title: z.string(),
+    category: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    date_created: phdsDate,
+    date_updated: phdsDate,
+    // Relationship foundation: slugs of related content (rendered as links).
+    related_projects: z.array(z.string()).optional(),
+    related_knowledge: z.array(z.string()).optional(),
+  }),
+});
+
+export const collections = { projects, knowledge };

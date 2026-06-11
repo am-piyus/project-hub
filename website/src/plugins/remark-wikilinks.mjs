@@ -65,9 +65,15 @@ function transform(node, resolve) {
 }
 
 export default function remarkWikilinks(options = {}) {
-  const targets = new Set(options.projects ?? []);
-  // Resolve a wikilink target to a URL, or null if it is unknown. Only the projects
-  // namespace exists today; a knowledge namespace can be added here in Bucket 0.1.4.
-  const resolve = (target) => (targets.has(target) ? `/projects/${target}` : null);
+  const projects = new Set(options.projects ?? []);
+  const knowledge = new Set(options.knowledge ?? []);
+  // Resolve a wikilink target to a URL, or null if it is unknown.
+  // Projects resolve first (the established namespace), then knowledge articles
+  // (namespace added by Droplet 0.1.4.4).
+  const resolve = (target) => {
+    if (projects.has(target)) return `/projects/${target}`;
+    if (knowledge.has(target)) return `/knowledge/${target}`;
+    return null;
+  };
   return (tree) => transform(tree, resolve);
 }

@@ -1,0 +1,236 @@
+---
+// Knowledge article shell (Droplet 0.1.4.4) — the reading experience for a
+// knowledge document: back link, title, knowledge metadata (category, dates,
+// tags), sticky TOC sidebar with scroll-spy, the article prose, and related
+// content links (knowledge ↔ project relationship foundation).
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import Container from '../components/Container.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import Tag from '../components/Tag.astro';
+import type { KnowledgeMetadata } from '../lib/knowledge';
+
+interface Props {
+  article: KnowledgeMetadata;
+  headings?: MarkdownHeading[];
+  readingMinutes?: number;
+  /** Resolved related links — only targets that actually exist are passed in. */
+  relatedProjects?: Array<{ title: string; url: string }>;
+  relatedKnowledge?: Array<{ title: string; url: string }>;
+}
+
+const {
+  article,
+  headings = [],
+  readingMinutes,
+  relatedProjects = [],
+  relatedKnowledge = [],
+} = Astro.props;
+const description = article.summary ?? `${article.title} — engineering knowledge article.`;
+const hasRelated = relatedProjects.length > 0 || relatedKnowledge.length > 0;
+---
+
+<BaseLayout title={article.title} description={description}>
+  <Container>
+    <p class="back"><a href="/knowledge">← Knowledge library</a></p>
+    <div class="page">
+      <TableOfContents headings={headings} />
+      <article>
+        <header>
+          <h1>{article.title}</h1>
+          {readingMinutes && <p class="reading-time">{readingMinutes} min read</p>}
+          <div class="meta">
+            <div class="meta-row">
+              <span class="category">{article.category}</span>
+              {article.dateCreated && article.dateCreated !== 'unknown' && (
+                <span class="date">Created {article.dateCreated}</span>
+              )}
+              {article.dateUpdated && article.dateUpdated !== 'unknown' && (
+                <span class="date">Updated {article.dateUpdated}</span>
+              )}
+            </div>
+            {
+              article.tags.length > 0 && (
+                <div class="tags">
+                  {article.tags.map((tag) => (
+                    <Tag label={tag} />
+                  ))}
+                </div>
+              )
+            }
+          </div>
+        </header>
+        <div class="prose">
+          <slot />
+        </div>
+        <footer class="doc-footer">
+          <p class="top"><a href="#main">↑ Back to top</a></p>
+          {
+            hasRelated && (
+              <nav class="related" aria-label="Related content">
+                {relatedProjects.length > 0 && (
+                  <div>
+                    <p class="related-title">Related projects</p>
+                    <ul>
+                      {relatedProjects.map((item) => (
+                        <li>
+                          <a href={item.url}>{item.title}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {relatedKnowledge.length > 0 && (
+                  <div>
+                    <p class="related-title">Related knowledge</p>
+                    <ul>
+                      {relatedKnowledge.map((item) => (
+                        <li>
+                          <a href={item.url}>{item.title}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </nav>
+            )
+          }
+        </footer>
+      </article>
+    </div>
+  </Container>
+</BaseLayout>
+
+<style>
+  .back {
+    margin-bottom: var(--space-6);
+    font-size: var(--text-sm);
+  }
+
+  .back a {
+    color: var(--color-text-secondary);
+  }
+
+  .back a:hover {
+    color: var(--color-primary);
+  }
+
+  /* Two-column reading layout: sticky TOC left, article right (desktop) */
+  .page {
+    display: block;
+  }
+
+  @media (min-width: 64rem) {
+    .page {
+      display: grid;
+      grid-template-columns: 15rem minmax(0, var(--width-content));
+      gap: var(--space-12);
+      justify-content: center;
+    }
+  }
+
+  article {
+    max-width: var(--width-content);
+    margin: 0 auto;
+  }
+
+  @media (min-width: 64rem) {
+    article {
+      margin: 0;
+    }
+  }
+
+  .reading-time {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    margin: calc(-1 * var(--space-2)) 0 0;
+  }
+
+  .meta {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    margin: var(--space-6) 0;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .category {
+    display: inline-block;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: 1;
+    padding: var(--space-1) var(--space-2);
+    border-radius: 999px;
+    color: var(--color-primary-strong);
+    background: var(--color-primary-subtle);
+    white-space: nowrap;
+  }
+
+  .date {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .doc-footer {
+    margin-top: var(--space-12);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .top {
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-4);
+  }
+
+  .top a {
+    color: var(--color-text-secondary);
+  }
+
+  .related {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 40rem) {
+    .related {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .related-title {
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-2);
+  }
+
+  .related ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .related li {
+    margin-bottom: var(--space-2);
+    font-size: var(--text-sm);
+  }
+</style>

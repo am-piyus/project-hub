@@ -3,18 +3,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Container from '../components/Container.astro';
 import Section from '../components/Section.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import KnowledgeCard from '../components/KnowledgeCard.astro';
 import Tag from '../components/Tag.astro';
 import { buildContentIndex } from '../lib/content-index';
 import { sortByRecency } from '../lib/metadata';
+import { sortKnowledgeByRecency } from '../lib/knowledge';
 
 // Homepage — the primary entry point of Project Hub (Droplet 0.1.4.2).
 // A living engineering knowledge gateway, not a marketing landing page:
-// hero → recent projects → knowledge library (future-ready) → portfolio intro.
+// hero → recent projects → knowledge library → portfolio intro.
 // All dynamic content comes from the Publishing Engine's content index.
-const { projects, count, tags } = await buildContentIndex();
+const { projects, count, tags, knowledge, knowledgeCount } = await buildContentIndex();
 
-// Recent projects — newest first; undated work sorts last.
+// Recent content — newest first; undated work sorts last.
 const recentProjects = sortByRecency(projects).slice(0, 6);
+const recentKnowledge = sortKnowledgeByRecency(knowledge).slice(0, 3);
 
 const topicCount = Object.keys(tags).length;
 
@@ -43,7 +46,8 @@ const disciplines = ['Robotics', 'Embedded Systems', 'Electronics', 'Mechatronic
       </p>
       <p class="stats" aria-label="Site statistics">
         <strong>{count}</strong> project{count === 1 ? '' : 's'} ·
-        <strong>{topicCount}</strong> topics · knowledge library — growing
+        <strong>{knowledgeCount}</strong> knowledge article{knowledgeCount === 1 ? '' : 's'} ·
+        <strong>{topicCount}</strong> topics
       </p>
     </section>
 
@@ -72,18 +76,39 @@ const disciplines = ['Robotics', 'Embedded Systems', 'Electronics', 'Mechatronic
       </Section>
     </div>
 
-    <!-- Knowledge library — future-ready (populated by Droplet 0.1.4.4) -->
+    <!-- Knowledge library — dynamic from the knowledge collection (0.1.4.4) -->
     <Section
       title="Knowledge Library"
       description="Standalone engineering knowledge — concepts, techniques, and references extracted from project work."
     >
-      <div class="placeholder">
-        <p>
-          The knowledge library is being seeded. Articles distilled from project
-          documentation — debugging patterns, tool configurations, and hard-won lessons —
-          will be published here.
-        </p>
-      </div>
+      {
+        recentKnowledge.length === 0 ? (
+          <div class="placeholder">
+            <p>
+              The knowledge library is being seeded. Articles distilled from project
+              documentation — debugging patterns, tool configurations, and hard-won
+              lessons — will be published here.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div class="grid knowledge-grid">
+              {recentKnowledge.map((article) => (
+                <KnowledgeCard
+                  title={article.title}
+                  url={article.url}
+                  summary={article.summary}
+                  category={article.category}
+                  tags={article.tags}
+                />
+              ))}
+            </div>
+            <p class="all-link">
+              <a href="/knowledge">Browse the library ({knowledgeCount}) →</a>
+            </p>
+          </>
+        )
+      }
     </Section>
 
     <!-- Portfolio introduction — who builds this and why it's published -->

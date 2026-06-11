@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import KnowledgeCard from '../../components/KnowledgeCard.astro';
+import { buildContentIndex } from '../../lib/content-index';
+import { sortKnowledgeByRecency } from '../../lib/knowledge';
+
+// Knowledge library listing (Droplet 0.1.4.4) — the central place to browse
+// engineering knowledge. Metadata-driven, newest first, with a designed
+// empty state while the library grows.
+const { knowledge, knowledgeCount } = await buildContentIndex();
+const ordered = sortKnowledgeByRecency(knowledge);
+---
+
+<BaseLayout
+  title="Knowledge"
+  description="Engineering knowledge library — concepts, techniques, and lessons extracted from project work."
+>
+  <Container>
+    <Section
+      title="Knowledge Library"
+      description="Reusable engineering knowledge — what was learned, what concepts matter, and what to understand before building."
+    >
+      {
+        ordered.length === 0 ? (
+          <div class="empty">
+            <p class="empty-title">The library is being seeded.</p>
+            <p>
+              Knowledge articles distilled from project documentation — debugging
+              patterns, tool configurations, and hard-won lessons — will be published
+              here. In the meantime, the engineering journeys live in the
+              <a href="/projects">projects</a>.
+            </p>
+          </div>
+        ) : (
+          <div class="grid">
+            {ordered.map((article) => (
+              <KnowledgeCard
+                title={article.title}
+                url={article.url}
+                summary={article.summary}
+                category={article.category}
+                tags={article.tags}
+              />
+            ))}
+          </div>
+        )
+      }
+      {knowledgeCount > 0 && (
+        <p class="count">{knowledgeCount} article{knowledgeCount === 1 ? '' : 's'} in the library.</p>
+      )}
+    </Section>
+  </Container>
+</BaseLayout>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 40rem) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .count {
+    margin: var(--space-4) 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  /* Empty state — designed for the growing library */
+  .empty {
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius);
+    padding: var(--space-8);
+    background: var(--color-surface);
+    max-width: 46rem;
+  }
+
+  .empty-title {
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+  }
+
+  .empty p:last-child {
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+</style>

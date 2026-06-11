@@ -24,8 +24,9 @@ export interface ProjectMetadata {
   aiSystems: string[];
 }
 
-/** Extract the PHDS summary — the first blockquote in the document body. */
-function extractSummary(body: string | undefined): string | undefined {
+/** Extract the document summary — the first blockquote in the markdown body
+ *  (the PHDS convention, shared by project and knowledge documents). */
+export function extractSummary(body: string | undefined): string | undefined {
   if (!body) return undefined;
   const match = body.match(/(?:^|\n)((?:[ \t]*>[^\n]*\n?)+)/);
   if (!match) return undefined;
