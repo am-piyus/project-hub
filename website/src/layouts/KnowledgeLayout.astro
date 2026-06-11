@@ -5,6 +5,7 @@
 // content links (knowledge ↔ project relationship foundation).
 import type { MarkdownHeading } from 'astro';
 import BaseLayout from './BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 import Container from '../components/Container.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import Tag from '../components/Tag.astro';
@@ -32,7 +33,16 @@ const hasRelated = relatedProjects.length > 0 || relatedKnowledge.length > 0;
 
 <BaseLayout title={article.title} description={description}>
   <Container>
-    <p class="back"><a href="/knowledge">← Knowledge library</a></p>
+    <!-- Auto-generated breadcrumb: Home / Knowledge / <title> (0.1.4.6) -->
+    <div class="crumbs">
+      <Breadcrumb
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Knowledge', href: '/knowledge' },
+          { label: article.title },
+        ]}
+      />
+    </div>
     <div class="page">
       <TableOfContents headings={headings} />
       <article>
@@ -102,17 +112,8 @@ const hasRelated = relatedProjects.length > 0 || relatedKnowledge.length > 0;
 </BaseLayout>
 
 <style>
-  .back {
+  .crumbs {
     margin-bottom: var(--space-6);
-    font-size: var(--text-sm);
-  }
-
-  .back a {
-    color: var(--color-text-secondary);
-  }
-
-  .back a:hover {
-    color: var(--color-primary);
   }
 
   /* Two-column reading layout: sticky TOC left, article right (desktop) */

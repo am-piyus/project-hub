@@ -1,19 +1,38 @@
 ---
-// Navigation bar — site identity, primary links, and the color-theme toggle.
-// Visual definition lives here (design system); the full navigation system
-// (active states, breadcrumbs wiring, responsive menu) is Droplet 0.1.4.6.
+// Global navigation (Droplet 0.1.4.6) — site identity, primary section links
+// with current-section highlighting, the color-theme toggle, and a responsive
+// mobile menu. Add future sections (Search, Tags, Blog, Profiles) to NAV_ITEMS;
+// the architecture needs no redesign to grow.
+const NAV_ITEMS = [
+  { label: 'Home', href: '/' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Knowledge', href: '/knowledge' },
+  { label: 'Portfolio', href: '/portfolio' },
+];
+
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`);
 ---
 
 <header class="site-header">
   <div class="inner">
     <a class="brand" href="/">Project<span>Hub</span></a>
     <div class="right">
-      <nav aria-label="Primary">
-        <a href="/">Home</a>
-        <a href="/projects">Projects</a>
-        <a href="/knowledge">Knowledge</a>
-        <a href="/portfolio">Portfolio</a>
-      </nav>
+      <button
+        id="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="primary-nav"
+        aria-label="Menu"
+      >
+        <svg class="open-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18" />
+        </svg>
+        <svg class="close-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
       <button id="theme-toggle" type="button" aria-label="Toggle color theme">
         <svg class="sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
           <circle cx="12" cy="12" r="4" />
@@ -24,6 +43,15 @@
         </svg>
       </button>
     </div>
+    <nav id="primary-nav" aria-label="Primary">
+      {
+        NAV_ITEMS.map((item) => (
+          <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
   </div>
 </header>
 
@@ -35,6 +63,14 @@
     try {
       localStorage.setItem('theme', next);
     } catch {}
+  });
+
+  // Mobile menu disclosure
+  const navToggle = document.getElementById('nav-toggle');
+  const header = document.querySelector('.site-header');
+  navToggle?.addEventListener('click', () => {
+    const open = header?.classList.toggle('menu-open') ?? false;
+    navToggle.setAttribute('aria-expanded', String(open));
   });
 </script>
 
@@ -55,6 +91,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
+    flex-wrap: wrap;
   }
 
   .brand {
@@ -75,7 +112,7 @@
   .right {
     display: flex;
     align-items: center;
-    gap: var(--space-6);
+    gap: var(--space-3);
   }
 
   nav {
@@ -87,6 +124,8 @@
     color: var(--color-text-secondary);
     font-size: var(--text-sm);
     font-weight: 500;
+    padding: var(--space-1) 0;
+    border-bottom: 2px solid transparent;
   }
 
   nav a:hover {
@@ -94,7 +133,15 @@
     text-decoration: none;
   }
 
-  #theme-toggle {
+  /* Where am I? — current section highlight */
+  nav a[aria-current='page'] {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  #theme-toggle,
+  #nav-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -108,15 +155,75 @@
     cursor: pointer;
   }
 
-  #theme-toggle:hover {
+  #theme-toggle:hover,
+  #nav-toggle:hover {
     color: var(--color-primary);
     border-color: var(--color-border-strong);
   }
 
-  /* Show the icon for the theme you would switch TO */
+  /* Theme toggle: show the icon for the theme you would switch TO */
   .moon { display: block; }
   .sun { display: none; }
 
   :global([data-theme='dark']) .moon { display: none; }
   :global([data-theme='dark']) .sun { display: block; }
+
+  /* Desktop: inline nav between brand and controls; no menu button */
+  #nav-toggle {
+    display: none;
+  }
+
+  @media (min-width: 40rem) {
+    nav {
+      order: 0;
+    }
+
+    .right {
+      order: 1;
+    }
+
+    .inner {
+      flex-wrap: nowrap;
+    }
+
+    nav {
+      margin-left: auto;
+      margin-right: var(--space-6);
+    }
+  }
+
+  /* Mobile: hamburger disclosure — nav drops to a full-width column */
+  @media (max-width: 39.99rem) {
+    #nav-toggle {
+      display: inline-flex;
+    }
+
+    .close-icon { display: none; }
+
+    :global(.site-header.menu-open) .open-icon { display: none; }
+    :global(.site-header.menu-open) .close-icon { display: block; }
+
+    nav {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      gap: var(--space-1);
+      padding: var(--space-2) 0 var(--space-1);
+      border-top: 1px solid var(--color-border);
+      margin-top: var(--space-2);
+    }
+
+    :global(.site-header.menu-open) nav {
+      display: flex;
+    }
+
+    nav a {
+      padding: var(--space-2) 0;
+      border-bottom: none;
+    }
+
+    nav a[aria-current='page'] {
+      border-bottom: none;
+    }
+  }
 </style>
