@@ -1,0 +1,25 @@
+---
+// Tag chip — topic/technology label. Becomes a filter link in the Discovery
+// System (Bucket 0.1.5); renders as a static chip until then.
+interface Props {
+  label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<span class="tag">{label}</span>
+
+<style>
+  .tag {
+    display: inline-block;
+    font-size: var(--text-sm);
+    line-height: 1;
+    color: var(--color-text-secondary);
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+  }
+</style>

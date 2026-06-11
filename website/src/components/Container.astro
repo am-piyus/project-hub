@@ -1,0 +1,29 @@
+---
+// Page container — constrains content width.
+// `width="content"` → long-form documentation measure (reading comfort)
+// `width="wide"`    → listings, homepage sections (default)
+interface Props {
+  width?: 'content' | 'wide';
+}
+
+const { width = 'wide' } = Astro.props;
+---
+
+<div class:list={['container', width]}>
+  <slot />
+</div>
+
+<style>
+  .container {
+    margin: 0 auto;
+    padding: 0 var(--space-4);
+  }
+
+  .container.wide {
+    max-width: var(--width-wide);
+  }
+
+  .container.content {
+    max-width: var(--width-content);
+  }
+</style>

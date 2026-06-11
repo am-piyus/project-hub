@@ -1,0 +1,45 @@
+---
+// Status badge — project lifecycle state with the design system's status colors.
+interface Props {
+  status: string;
+}
+
+const { status } = Astro.props;
+const key = status.toLowerCase().replace(/\s+/g, '-');
+const known = ['completed', 'in-progress', 'sealed', 'planned'];
+const variant = known.includes(key) ? key : 'planned';
+---
+
+<span class:list={['badge', variant]}>{status}</span>
+
+<style>
+  .badge {
+    display: inline-block;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: 1;
+    padding: var(--space-1) var(--space-2);
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .completed {
+    color: var(--color-status-completed);
+    background: var(--color-status-completed-bg);
+  }
+
+  .in-progress {
+    color: var(--color-status-progress);
+    background: var(--color-status-progress-bg);
+  }
+
+  .sealed {
+    color: var(--color-status-sealed);
+    background: var(--color-status-sealed-bg);
+  }
+
+  .planned {
+    color: var(--color-status-planned);
+    background: var(--color-status-planned-bg);
+  }
+</style>

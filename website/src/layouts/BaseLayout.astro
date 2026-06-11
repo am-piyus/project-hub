@@ -1,0 +1,44 @@
+---
+// Base layout — the HTML shell every Project Hub page inherits.
+// Provides: global design system styles, SEO metadata, site header/footer,
+// accessible skip link, and the main content landmark.
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Engineering project documentation and knowledge, published from Obsidian.' } = Astro.props;
+const fullTitle = title === 'Project Hub' ? title : `${title} · Project Hub`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <title>{fullTitle}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <SiteHeader />
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>
+
+<style>
+  main {
+    min-height: 60vh;
+    padding: var(--space-8) 0 var(--space-16);
+  }
+</style>

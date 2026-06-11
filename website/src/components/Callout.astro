@@ -1,0 +1,59 @@
+---
+// Callout — highlighted note/warning block for site pages.
+// Note: callouts inside markdown (`> [!note]`) still render as styled
+// blockquotes; transforming them into this component is a recorded
+// publishing-engine re-entry point (see Publishing_Build_Verification §6).
+interface Props {
+  type?: 'note' | 'warning';
+  title?: string;
+}
+
+const { type = 'note', title } = Astro.props;
+const defaultTitle = type === 'warning' ? 'Warning' : 'Note';
+---
+
+<aside class:list={['callout', type]}>
+  <p class="title">{title ?? defaultTitle}</p>
+  <div class="body">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .callout {
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    margin: var(--space-6) 0;
+    border: 1px solid;
+  }
+
+  .callout.note {
+    background: var(--color-primary-subtle);
+    border-color: var(--color-primary);
+  }
+
+  .callout.warning {
+    background: var(--color-status-progress-bg);
+    border-color: var(--color-status-progress);
+  }
+
+  .title {
+    font-weight: 700;
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 var(--space-2);
+  }
+
+  .note .title {
+    color: var(--color-primary-strong);
+  }
+
+  .warning .title {
+    color: var(--color-status-progress);
+  }
+
+  .body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

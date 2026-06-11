@@ -1,0 +1,51 @@
+---
+// Knowledge card — one knowledge article in a listing. Future-ready: the
+// knowledge library arrives with Droplet 0.1.4.4; this defines its card shape.
+interface Props {
+  title: string;
+  url: string;
+  description?: string;
+}
+
+const { title, url, description } = Astro.props;
+---
+
+<article class="card">
+  <h3><a href={url}>{title}</a></h3>
+  {description && <p>{description}</p>}
+</article>
+
+<style>
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    padding: var(--space-4);
+    transition: border-color 120ms ease;
+  }
+
+  .card:hover {
+    border-color: var(--color-border-strong);
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    margin: 0 0 var(--space-2);
+  }
+
+  h3 a {
+    color: var(--color-text);
+  }
+
+  h3 a:hover {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  p {
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
+    margin: 0;
+  }
+</style>

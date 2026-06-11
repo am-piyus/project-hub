@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import { extractMetadata } from '../../lib/metadata';
 
 // One static route per project folder discovered under content/.
 export async function getStaticPaths() {
@@ -12,10 +13,11 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-// Render the PHDS markdown body to HTML.
+// Render the PHDS markdown body to HTML; metadata flows into the layout.
 const { Content } = await render(entry);
+const project = extractMetadata(entry);
 ---
 
-<ProjectLayout title={entry.data.title} data={entry.data}>
+<ProjectLayout project={project}>
   <Content />
 </ProjectLayout>

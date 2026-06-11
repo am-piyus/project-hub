@@ -1,40 +1,45 @@
 ---
-// Minimal project page shell. Styling and full website chrome are out of scope for this
-// droplet (Markdown Rendering Pipeline) and arrive with the Website Interface (Bucket 0.1.4).
+// Project page shell — design-system layout for a rendered PHDS document:
+// breadcrumb-style back link, title, metadata block, then documentation prose.
+// Deeper project-page UX (readability refinements) is Droplet 0.1.4.3.
+import BaseLayout from './BaseLayout.astro';
+import Container from '../components/Container.astro';
+import MetadataBlock from '../components/MetadataBlock.astro';
+import type { ProjectMetadata } from '../lib/metadata';
+
 interface Props {
-  title: string;
-  data: {
-    status?: string;
-    tags?: string[];
-  };
+  project: ProjectMetadata;
 }
 
-const { title, data } = Astro.props;
+const { project } = Astro.props;
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title} · Project Hub</title>
-  </head>
-  <body>
-    <main>
-      <p><a href="/">← All projects</a></p>
-      <article>
-        <header>
-          <h1>{title}</h1>
-          {data.status && <p><strong>Status:</strong> {data.status}</p>}
-          {
-            data.tags && data.tags.length > 0 && (
-              <p><strong>Tags:</strong> {data.tags.join(', ')}</p>
-            )
-          }
-        </header>
-        <!-- Rendered PHDS markdown -->
+<BaseLayout title={project.title} description={`${project.title} — engineering project documentation.`}>
+  <Container width="content">
+    <p class="back"><a href="/#projects">← All projects</a></p>
+    <article>
+      <header>
+        <h1>{project.title}</h1>
+        <MetadataBlock project={project} />
+      </header>
+      <div class="prose">
         <slot />
-      </article>
-    </main>
-  </body>
-</html>
+      </div>
+    </article>
+  </Container>
+</BaseLayout>
+
+<style>
+  .back {
+    margin-bottom: var(--space-6);
+    font-size: var(--text-sm);
+  }
+
+  .back a {
+    color: var(--color-text-secondary);
+  }
+
+  .back a:hover {
+    color: var(--color-primary);
+  }
+</style>

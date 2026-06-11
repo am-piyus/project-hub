@@ -1,0 +1,39 @@
+---
+// Search box — future-ready placeholder for the Discovery System (Bucket 0.1.5,
+// Pagefind). Defined by the design system but NOT mounted on any page until
+// search is implemented; rendering it now would present a dead control.
+---
+
+<form class="search" role="search" action="/search" method="get">
+  <label class="sr-only" for="site-search">Search projects and knowledge</label>
+  <input
+    id="site-search"
+    type="search"
+    name="q"
+    placeholder="Search projects and knowledge…"
+    autocomplete="off"
+  />
+</form>
+
+<style>
+  .search input {
+    width: 100%;
+    font: inherit;
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .search input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
+    border-color: var(--color-primary);
+  }
+
+  .search input::placeholder {
+    color: var(--color-text-muted);
+  }
+</style>

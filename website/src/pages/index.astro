@@ -1,37 +1,54 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/Container.astro';
+import Section from '../components/Section.astro';
+import ProjectCard from '../components/ProjectCard.astro';
 import { buildContentIndex } from '../lib/content-index';
 
-// Metadata-driven project listing — rendered from the generated content index.
+// Metadata-driven project listing on the design system.
+// The full landing experience (hero, overviews, portfolio intro) is Droplet 0.1.4.2.
 const { projects, count } = await buildContentIndex();
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Project Hub</title>
-  </head>
-  <body>
-    <main>
-      <h1>Project Hub</h1>
-      <p>{count} project{count === 1 ? '' : 's'} published from <code>content/</code>.</p>
+<BaseLayout title="Project Hub">
+  <Container>
+    <div id="projects">
+      <Section
+        title="Projects"
+        description={`${count} engineering project${count === 1 ? '' : 's'} — documented, preserved, and published from Obsidian.`}
+      >
+        {
+          projects.length === 0 ? (
+            <p>No projects published yet.</p>
+          ) : (
+            <div class="grid">
+              {projects.map((project) => (
+                <ProjectCard project={project} />
+              ))}
+            </div>
+          )
+        }
+      </Section>
+    </div>
+  </Container>
+</BaseLayout>
 
-      {
-        projects.length === 0 ? (
-          <p>No projects published yet.</p>
-        ) : (
-          <ul>
-            {projects.map((project) => (
-              <li>
-                <a href={project.url}>{project.title}</a>
-                <span> — {project.status}</span>
-                {project.tags.length > 0 && <span> · {project.tags.slice(0, 5).join(', ')}</span>}
-              </li>
-            ))}
-          </ul>
-        )
-      }
-    </main>
-  </body>
-</html>
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 40rem) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

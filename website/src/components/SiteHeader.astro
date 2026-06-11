@@ -1,0 +1,67 @@
+---
+// Navigation bar — site identity + primary links.
+// Visual definition lives here (design system); the full navigation system
+// (active states, breadcrumbs wiring, responsive menu) is Droplet 0.1.4.6.
+---
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="/">Project<span>Hub</span></a>
+    <nav aria-label="Primary">
+      <a href="/">Home</a>
+      {/* points at the index listing until the dedicated /projects route ships (0.1.4.3) */}
+      <a href="/#projects">Projects</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .inner {
+    max-width: var(--width-wide);
+    margin: 0 auto;
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .brand {
+    font-weight: 700;
+    font-size: var(--text-lg);
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+  }
+
+  .brand span {
+    color: var(--color-primary);
+  }
+
+  .brand:hover {
+    text-decoration: none;
+  }
+
+  nav {
+    display: flex;
+    gap: var(--space-6);
+  }
+
+  nav a {
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+
+  nav a:hover {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+</style>
