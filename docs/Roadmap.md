@@ -28,16 +28,14 @@
 
 ## 2. Bucket Roadmap (Orbit 0.1)
 
-| Bucket | Focus |
-| --- | --- |
-| 0.1.1 – Product Definition | Vision, scope, workflow, requirements, success criteria. |
-| 0.1.2 – Documentation Workflow | Conversations → structured docs; sealing; knowledge extraction; UPDS. |
-| 0.1.3 – Vault Architecture | Obsidian vault structure, folders, note organization, linking. |
-| 0.1.4 – Knowledge Extraction System | Extraction prompts, templates, AI-assisted summarization. |
-| 0.1.5 – Publishing Engine | Markdown → webpages, rendering, assets, publishing pipeline. |
-| 0.1.6 – Website Interface | Homepage, project/documentation/portfolio pages, navigation. |
-| 0.1.7 – Discovery System | Search, tags, categories, filtering. |
-| 0.1.8 – Deployment Pipeline | Obsidian → GitHub → Project Hub; automate and validate end-to-end. |
+| Bucket | Focus | Status |
+| --- | --- | --- |
+| 0.1.1 – Product Definition | Vision, scope, workflow, requirements, success criteria. | ✅ Complete |
+| 0.1.2 – Documentation Workflow | Extraction → refinement engine → manual refinement → Obsidian storage (PHDS). | ✅ Complete |
+| 0.1.3 – Publishing Engine | Markdown → webpages; resources, links, metadata, content index, build. | ✅ Complete — frozen V0.1 baseline |
+| 0.1.4 – Website Interface | Homepage, project/knowledge/portfolio pages, navigation. | ▶ Next |
+| 0.1.5 – Discovery System | Search, tags, categories, filtering. | Planned |
+| 0.1.6 – Deployment Pipeline | Obsidian → GitHub → Project Hub; automate and validate end-to-end. | Planned |
 
 ## 3. Beyond Orbit 0.1 — Next Orbit Priorities
 

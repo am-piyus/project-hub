@@ -1,7 +1,7 @@
 # Architecture
 
-> High-level architecture for Project Hub V0.1. Detailed component design is defined in
-> later droplets (see Bucket 0.1.1 – Droplets 0.1.1.5 and 0.1.1.6).
+> High-level architecture for Project Hub V0.1. Technology-stack decisions are recorded
+> in [Publishing Technology Selection](Publishing_Technology_Selection.md) (Droplet 0.1.3.1).
 
 ## 1. Architectural Overview
 
@@ -64,10 +64,13 @@ for V0.1.
 ```
 project-hub/
 ├── planning      # Orbit / bucket / droplet planning artifacts
-├── docs          # Product definition documents (this folder)
-├── website       # Static site generator, templates, and styles
+├── docs          # Product definition, decisions, and vision log (this folder)
+├── prompts       # Stage 1 — Knowledge Extraction Prompt
+├── dre           # Stage 2 — Documentation Refinement Engine workspace
+├── workflow      # Stage 3–4 — manual refinement + Obsidian storage specs
+├── website       # Astro publishing engine (static site)
 ├── assets        # Images, attachments, embedded resources
-├── content       # Published markdown sourced from Obsidian
+├── content       # Published projects sourced from Obsidian
 └── README.md
 ```
 
@@ -85,7 +88,7 @@ project-hub/
 
 ---
 
-*Detailed technology-stack and component decisions are deferred to Droplet 0.1.1.5
-(Technology Stack) and Droplet 0.1.1.6 (Product Architecture).*
+*Technology-stack and publishing decisions: [Publishing Technology Selection](Publishing_Technology_Selection.md).
+Long-term direction: [Vision Log](Project_Hub_Vision_Log.md).*
 
 *See also: [Vision](Vision.md) · [Product Requirements](ProductRequirements.md) · [Roadmap](Roadmap.md)*

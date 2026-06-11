@@ -63,9 +63,12 @@ a social network · a commercial SaaS product.
 project-hub/
 ├── planning      # Orbit / bucket / droplet planning artifacts
 ├── docs          # Product definition: vision, requirements, architecture, roadmap
-├── website       # Static site generator and templates
+├── prompts       # Stage 1 — Knowledge Extraction Prompt
+├── dre           # Stage 2 — Documentation Refinement Engine workspace
+├── workflow      # Stage 3–4 — manual refinement + Obsidian storage specs
+├── website       # Astro publishing engine (static site)
 ├── assets        # Images, attachments, embedded resources
-├── content       # Published markdown content sourced from Obsidian
+├── content       # Published projects sourced from Obsidian
 └── README.md
 ```
 
@@ -74,9 +77,13 @@ project-hub/
 | Document | Purpose |
 | --- | --- |
 | [Vision](docs/Vision.md) | Product purpose, problem, and long-term vision |
+| [Vision Log](docs/Project_Hub_Vision_Log.md) | Raw long-term vision, philosophy, and future ecosystem direction |
 | [Product Requirements](docs/ProductRequirements.md) | Scope, features, and V0.1 boundaries |
 | [Architecture](docs/Architecture.md) | System components, content flow, storage |
-| [Roadmap](docs/Roadmap.md) | Success criteria and future direction |
+| [Roadmap](docs/Roadmap.md) | Success criteria, bucket progress, and future direction |
+| [Publishing Technology Selection](docs/Publishing_Technology_Selection.md) | Publishing stack decisions and rationale |
+| [Publishing Build Verification](docs/Publishing_Build_Verification.md) | V0.1 publishing baseline verification report |
+| [README_IDE](README_IDE.md) | Operating guide for AI-assisted implementation sessions |
 
 ## Links
 
