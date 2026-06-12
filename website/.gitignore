@@ -1,7 +1,8 @@
 # build output
 dist/
-# generated resource mirror (synced from repo-root content/ by the project-resources integration)
+# generated resource mirrors (synced from repo-root content/ and knowledge/ by the project-resources integration)
 public/projects/
+public/knowledge/
 # generated types
 .astro/
 # dependencies
@@ -13,3 +14,5 @@ npm-debug.log*
 .env.production
 # macOS
 .DS_Store
+# ignore obsidian files
+content/.obsidian/

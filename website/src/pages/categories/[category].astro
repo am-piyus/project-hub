@@ -8,6 +8,7 @@ import KnowledgeCard from '../../components/KnowledgeCard.astro';
 import ContentFilter, { type Facet } from '../../components/ContentFilter.astro';
 import { buildContentIndex } from '../../lib/content-index';
 import type { CategoryRecord } from '../../lib/discovery';
+import { withBase } from '../../lib/url-generator';
 
 // One generated page per category (Droplet 0.1.5.3) — all content belonging
 // to a knowledge domain, grouped by content type.
@@ -49,8 +50,8 @@ const typeFacet: Facet[] =
     <div class="crumbs">
       <Breadcrumb
         items={[
-          { label: 'Home', href: '/' },
-          { label: 'Categories', href: '/categories' },
+          { label: 'Home', href: withBase('/') },
+          { label: 'Categories', href: withBase('/categories') },
           { label: record.category },
         ]}
       />
@@ -90,7 +91,7 @@ const typeFacet: Facet[] =
           </div>
         )
       }
-      <p class="back-link"><a href="/categories">← All categories</a></p>
+      <p class="back-link"><a href={withBase('/categories')}>← All categories</a></p>
     </Section>
   </Container>
 </BaseLayout>

@@ -9,6 +9,7 @@ import Tag from '../components/Tag.astro';
 import { buildContentIndex } from '../lib/content-index';
 import { sortByRecency } from '../lib/metadata';
 import { sortKnowledgeByRecency } from '../lib/knowledge';
+import { withBase } from '../lib/url-generator';
 
 // Homepage — the primary entry point of Project Hub (Droplet 0.1.4.2).
 // A living engineering knowledge gateway, not a marketing landing page:
@@ -42,7 +43,7 @@ const disciplines = ['Robotics', 'Embedded Systems', 'Electronics', 'Mechatronic
         mistakes.
       </p>
       <p class="actions">
-        <a class="button primary" href="/projects">Browse projects</a>
+        <a class="button primary" href={withBase('/projects')}>Browse projects</a>
         <a class="button" href="#about">About this site</a>
       </p>
       <div class="hero-search">
@@ -72,7 +73,7 @@ const disciplines = ['Robotics', 'Embedded Systems', 'Electronics', 'Mechatronic
                 ))}
               </div>
               <p class="all-link">
-                <a href="/projects">All projects →</a>
+                <a href={withBase('/projects')}>All projects →</a>
               </p>
             </>
           )
@@ -108,7 +109,7 @@ const disciplines = ['Robotics', 'Embedded Systems', 'Electronics', 'Mechatronic
               ))}
             </div>
             <p class="all-link">
-              <a href="/knowledge">Browse the library ({knowledgeCount}) →</a>
+              <a href={withBase('/knowledge')}>Browse the library ({knowledgeCount}) →</a>
             </p>
           </>
         )
@@ -134,7 +135,7 @@ const disciplines = ['Robotics', 'Embedded Systems', 'Electronics', 'Mechatronic
             {disciplines.map((d) => <Tag label={d} linked={false} />)}
           </p>
           <p class="all-link">
-            <a href="/portfolio">Visit the portfolio →</a>
+            <a href={withBase('/portfolio')}>Visit the portfolio →</a>
           </p>
         </div>
       </Section>

@@ -7,15 +7,23 @@ import remarkResourceLinks from './src/plugins/remark-resource-links.mjs';
 
 // Project Hub — static site generator (see docs/Publishing_Technology_Selection.md).
 //
-// `site` and `base` (required for the GitHub Pages sub-path) are configured later in the
-// Deployment Pipeline (Bucket 0.1.6). Default output is a static build under dist/.
+// Production target (Droplet 0.1.6.1): GitHub Pages project site —
+// https://am-piyus.github.io/project-hub/ — so every internal URL carries the
+// repository base path. BASE is the single source of truth: Astro routing uses
+// it via `base`, components/libs read it via import.meta.env.BASE_URL, and the
+// remark plugins receive it through their options below.
+const SITE = 'https://am-piyus.github.io';
+const BASE = '/project-hub';
+
 export default defineConfig({
+  site: SITE,
+  base: BASE,
   // Mirror project resources (images/gifs/files) into the build and validate references;
   // resolve Obsidian wikilinks into internal navigation and validate them;
   // generate the Pagefind search index after each build.
-  integrations: [projectResources(), internalLinks(), searchIndex()],
+  integrations: [projectResources(), internalLinks({ base: BASE }), searchIndex()],
   markdown: {
     // Keep resource embeds at their portable project-relative paths (preserves GIFs).
-    remarkPlugins: [remarkResourceLinks],
+    remarkPlugins: [[remarkResourceLinks, { base: BASE }]],
   },
 });

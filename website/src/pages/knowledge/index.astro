@@ -7,6 +7,7 @@ import ContentFilter, { type Facet } from '../../components/ContentFilter.astro'
 import { buildContentIndex } from '../../lib/content-index';
 import { sortKnowledgeByRecency } from '../../lib/knowledge';
 import { discoverySlug } from '../../lib/discovery';
+import { withBase } from '../../lib/url-generator';
 
 // Knowledge library listing (Droplet 0.1.4.4) — the central place to browse
 // engineering knowledge. Metadata-driven, newest first, with a designed
@@ -46,7 +47,7 @@ const facets: Facet[] = [
               Knowledge articles distilled from project documentation — debugging
               patterns, tool configurations, and hard-won lessons — will be published
               here. In the meantime, the engineering journeys live in the
-              <a href="/projects">projects</a>.
+              <a href={withBase('/projects')}>projects</a>.
             </p>
           </div>
         ) : (

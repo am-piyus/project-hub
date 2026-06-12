@@ -7,6 +7,7 @@
 
 import type { ProjectMetadata } from './metadata';
 import type { KnowledgeMetadata } from './knowledge';
+import { withBase } from './url-generator';
 
 /** URL-safe slug for a tag or category name. */
 export function discoverySlug(name: string): string {
@@ -18,7 +19,7 @@ export function discoverySlug(name: string): string {
 }
 
 export function tagUrl(tag: string): string {
-  return `/tags/${discoverySlug(tag)}`;
+  return withBase(`/tags/${discoverySlug(tag)}`);
 }
 
 export interface TagRecord {
@@ -43,7 +44,7 @@ export function buildTagRegistry(
     if (!slug) return;
     let record = records.get(slug);
     if (!record) {
-      record = { tag, slug, url: `/tags/${slug}`, count: 0, projects: [], knowledge: [] };
+      record = { tag, slug, url: withBase(`/tags/${slug}`), count: 0, projects: [], knowledge: [] };
       records.set(slug, record);
     }
     record.count += 1;
@@ -63,7 +64,7 @@ export function buildTagRegistry(
 // on category pages.
 
 export function categoryUrl(category: string): string {
-  return `/categories/${discoverySlug(category)}`;
+  return withBase(`/categories/${discoverySlug(category)}`);
 }
 
 export interface CategoryRecord {
@@ -89,7 +90,14 @@ export function buildCategoryRegistry(
     if (!slug) return;
     let record = records.get(slug);
     if (!record) {
-      record = { category: name, slug, url: `/categories/${slug}`, count: 0, projects: [], knowledge: [] };
+      record = {
+        category: name,
+        slug,
+        url: withBase(`/categories/${slug}`),
+        count: 0,
+        projects: [],
+        knowledge: [],
+      };
       records.set(slug, record);
     }
     record.count += 1;

@@ -2,13 +2,15 @@
 // Footer (Droplet 0.1.4.6) — secondary navigation, platform information, and
 // quiet credits. Future expansion (social, community, profile links) extends
 // the columns without redesigning the footer.
+import { withBase } from '../lib/url-generator';
+
 const year = new Date().getFullYear();
 
 const exploreLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'Projects', href: '/projects' },
-  { label: 'Knowledge', href: '/knowledge' },
-  { label: 'Portfolio', href: '/portfolio' },
+  { label: 'Home', href: withBase('/') },
+  { label: 'Projects', href: withBase('/projects') },
+  { label: 'Knowledge', href: withBase('/knowledge') },
+  { label: 'Portfolio', href: withBase('/portfolio') },
 ];
 
 const platformLinks = [

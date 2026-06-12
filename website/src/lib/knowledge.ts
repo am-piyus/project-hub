@@ -6,6 +6,7 @@
 
 import type { CollectionEntry } from 'astro:content';
 import { extractSummary } from './metadata';
+import { withBase } from './url-generator';
 
 export const KNOWLEDGE_BASE = '/knowledge';
 
@@ -22,9 +23,9 @@ export interface KnowledgeMetadata {
   relatedKnowledge: string[];
 }
 
-/** The site-absolute URL for a knowledge article page. */
+/** The site-absolute URL for a knowledge article page (base-aware). */
 export function knowledgeUrl(slug: string): string {
-  return `${KNOWLEDGE_BASE}/${slug}`;
+  return withBase(`${KNOWLEDGE_BASE}/${slug}`);
 }
 
 /** Extract normalized metadata from a knowledge collection entry. */

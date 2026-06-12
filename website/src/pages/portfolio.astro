@@ -8,6 +8,7 @@ import Tag from '../components/Tag.astro';
 import { buildContentIndex } from '../lib/content-index';
 import { sortByRecency } from '../lib/metadata';
 import { siteProfile } from '../lib/profile';
+import { withBase } from '../lib/url-generator';
 
 // Portfolio (Droplet 0.1.4.5) — the public engineering identity: profile,
 // featured work, project highlights, and the road ahead. Not a résumé — a
@@ -86,7 +87,7 @@ const futureCapabilities = [
           </li>
         ))}
       </ul>
-      <p class="all-link"><a href="/projects">All projects →</a></p>
+      <p class="all-link"><a href={withBase('/projects')}>All projects →</a></p>
     </Section>
 
     <!-- The road ahead — future platform capabilities (informational, V0.1) -->

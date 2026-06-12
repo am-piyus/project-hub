@@ -1,10 +1,9 @@
 ---
-// Search box — future-ready placeholder for the Discovery System (Bucket 0.1.5,
-// Pagefind). Defined by the design system but NOT mounted on any page until
-// search is implemented; rendering it now would present a dead control.
+// Search box — submits to the site search page (Pagefind, Droplet 0.1.5.1).
+import { withBase } from '../lib/url-generator';
 ---
 
-<form class="search" role="search" action="/search" method="get">
+<form class="search" role="search" action={withBase('/search')} method="get">
   <label class="sr-only" for="site-search">Search projects and knowledge</label>
   <input
     id="site-search"

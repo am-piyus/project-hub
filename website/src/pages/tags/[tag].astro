@@ -8,6 +8,7 @@ import KnowledgeCard from '../../components/KnowledgeCard.astro';
 import ContentFilter, { type Facet } from '../../components/ContentFilter.astro';
 import { buildContentIndex } from '../../lib/content-index';
 import type { TagRecord } from '../../lib/discovery';
+import { withBase } from '../../lib/url-generator';
 
 // One generated page per tag (Droplet 0.1.5.2) — aggregates every project and
 // knowledge article carrying the tag. Cross-content discovery in one place.
@@ -48,7 +49,7 @@ const typeFacet: Facet[] =
   <Container>
     <div class="crumbs">
       <Breadcrumb
-        items={[{ label: 'Home', href: '/' }, { label: 'Tags', href: '/tags' }, { label: record.tag }]}
+        items={[{ label: 'Home', href: withBase('/') }, { label: 'Tags', href: withBase('/tags') }, { label: record.tag }]}
       />
     </div>
     <Section
@@ -86,7 +87,7 @@ const typeFacet: Facet[] =
           </div>
         )
       }
-      <p class="back-link"><a href="/tags">← All tags</a></p>
+      <p class="back-link"><a href={withBase('/tags')}>← All tags</a></p>
     </Section>
   </Container>
 </BaseLayout>

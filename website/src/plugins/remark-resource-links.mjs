@@ -28,16 +28,16 @@ function escapeAttr(value = '') {
     .replace(/>/g, '&gt;');
 }
 
-function resolveBase(file) {
+function resolveBase(file, deployBase) {
   const filePath = file?.path ?? file?.history?.[file.history.length - 1];
   if (!filePath) return null;
   const slug = path.basename(path.dirname(filePath));
   // The content root the document lives in decides its URL namespace:
-  //   <repo>/content/<slug>/…   → /projects/<slug>
-  //   <repo>/knowledge/<slug>/… → /knowledge/<slug>   (Droplet 0.1.4.4)
+  //   <repo>/content/<slug>/…   → <deployBase>/projects/<slug>
+  //   <repo>/knowledge/<slug>/… → <deployBase>/knowledge/<slug>   (0.1.4.4)
   const root = path.basename(path.dirname(path.dirname(filePath)));
   const segment = root === 'knowledge' ? 'knowledge' : 'projects';
-  return `/${segment}/${slug}`;
+  return `${deployBase}/${segment}/${slug}`;
 }
 
 function toAbsolute(url, base) {
@@ -68,6 +68,8 @@ function walk(node, base) {
   });
 }
 
-export default function remarkResourceLinks() {
-  return (tree, file) => walk(tree, resolveBase(file));
+export default function remarkResourceLinks(options = {}) {
+  // Deployment base path (e.g. '/project-hub' on GitHub Pages), '' at root.
+  const deployBase = (options.base ?? '').replace(/\/$/, '');
+  return (tree, file) => walk(tree, resolveBase(file, deployBase));
 }

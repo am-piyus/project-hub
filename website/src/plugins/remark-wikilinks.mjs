@@ -67,12 +67,14 @@ function transform(node, resolve) {
 export default function remarkWikilinks(options = {}) {
   const projects = new Set(options.projects ?? []);
   const knowledge = new Set(options.knowledge ?? []);
+  // Deployment base path (e.g. '/project-hub' on GitHub Pages), '' at root.
+  const base = (options.base ?? '').replace(/\/$/, '');
   // Resolve a wikilink target to a URL, or null if it is unknown.
   // Projects resolve first (the established namespace), then knowledge articles
   // (namespace added by Droplet 0.1.4.4).
   const resolve = (target) => {
-    if (projects.has(target)) return `/projects/${target}`;
-    if (knowledge.has(target)) return `/knowledge/${target}`;
+    if (projects.has(target)) return `${base}/projects/${target}`;
+    if (knowledge.has(target)) return `${base}/knowledge/${target}`;
     return null;
   };
   return (tree) => transform(tree, resolve);

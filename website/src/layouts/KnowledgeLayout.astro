@@ -11,6 +11,7 @@ import TableOfContents from '../components/TableOfContents.astro';
 import Tag from '../components/Tag.astro';
 import type { KnowledgeMetadata } from '../lib/knowledge';
 import { categoryUrl } from '../lib/discovery';
+import { withBase } from '../lib/url-generator';
 
 interface Props {
   article: KnowledgeMetadata;
@@ -38,8 +39,8 @@ const hasRelated = relatedProjects.length > 0 || relatedKnowledge.length > 0;
     <div class="crumbs">
       <Breadcrumb
         items={[
-          { label: 'Home', href: '/' },
-          { label: 'Knowledge', href: '/knowledge' },
+          { label: 'Home', href: withBase('/') },
+          { label: 'Knowledge', href: withBase('/knowledge') },
           { label: article.title },
         ]}
       />

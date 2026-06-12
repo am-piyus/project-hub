@@ -10,6 +10,7 @@ import Container from '../components/Container.astro';
 import MetadataBlock from '../components/MetadataBlock.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import type { ProjectMetadata } from '../lib/metadata';
+import { withBase } from '../lib/url-generator';
 
 interface Props {
   project: ProjectMetadata;
@@ -41,8 +42,8 @@ const description = project.summary ?? `${project.title} — engineering project
     <div class="crumbs">
       <Breadcrumb
         items={[
-          { label: 'Home', href: '/' },
-          { label: 'Projects', href: '/projects' },
+          { label: 'Home', href: withBase('/') },
+          { label: 'Projects', href: withBase('/projects') },
           { label: project.title },
         ]}
       />

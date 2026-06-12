@@ -2,10 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Container from '../components/Container.astro';
 import Section from '../components/Section.astro';
+import { BASE } from '../lib/url-generator';
 
 // Site-wide search (Droplet 0.1.5.1) — Pagefind UI over the static index
 // generated at build time. Supports ?q= deep links (e.g. from the header
 // search box). In dev mode the index doesn't exist; a notice explains that.
+// Pagefind assets live under the deployment base path (0.1.6.1).
+const pagefindBase = `${BASE}/pagefind`;
 ---
 
 <BaseLayout
@@ -29,16 +32,16 @@ import Section from '../components/Section.astro';
   </Container>
 </BaseLayout>
 
-<script is:inline>
+<script is:inline define:vars={{ pagefindBase }}>
   (async () => {
     try {
       // Pagefind assets exist only in build output.
       const [{ PagefindUI }] = await Promise.all([
-        import('/pagefind/pagefind-ui.js'),
+        import(`${pagefindBase}/pagefind-ui.js`),
         new Promise((resolve) => {
           const link = document.createElement('link');
           link.rel = 'stylesheet';
-          link.href = '/pagefind/pagefind-ui.css';
+          link.href = `${pagefindBase}/pagefind-ui.css`;
           link.onload = resolve;
           link.onerror = resolve;
           document.head.appendChild(link);

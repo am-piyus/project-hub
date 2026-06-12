@@ -32,6 +32,8 @@ async function listFolders(dir) {
 export default function internalLinks(options = {}) {
   const contentDirName = options.contentDir ?? '../content';
   const knowledgeDirName = options.knowledgeDir ?? '../knowledge';
+  // Deployment base path (e.g. '/project-hub' on GitHub Pages), '' at root.
+  const base = (options.base ?? '').replace(/\/$/, '');
 
   return {
     name: 'internal-links',
@@ -51,7 +53,9 @@ export default function internalLinks(options = {}) {
         const targets = new Set([...projects, ...knowledge]);
 
         // Register the wikilink transform with the discovered targets.
-        updateConfig({ markdown: { remarkPlugins: [[remarkWikilinks, { projects, knowledge }]] } });
+        updateConfig({
+          markdown: { remarkPlugins: [[remarkWikilinks, { projects, knowledge, base }]] },
+        });
 
         // Validate wikilinks across all documentation roots.
         let total = 0;

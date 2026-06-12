@@ -3,22 +3,27 @@
 // with current-section highlighting, the color-theme toggle, and a responsive
 // mobile menu. Add future sections (Search, Tags, Blog, Profiles) to NAV_ITEMS;
 // the architecture needs no redesign to grow.
+import { withBase } from '../lib/url-generator';
+
 const NAV_ITEMS = [
-  { label: 'Home', href: '/' },
-  { label: 'Projects', href: '/projects' },
-  { label: 'Knowledge', href: '/knowledge' },
-  { label: 'Portfolio', href: '/portfolio' },
-  { label: 'Search', href: '/search' },
+  { label: 'Home', href: withBase('/') },
+  { label: 'Projects', href: withBase('/projects') },
+  { label: 'Knowledge', href: withBase('/knowledge') },
+  { label: 'Portfolio', href: withBase('/portfolio') },
+  { label: 'Search', href: withBase('/search') },
 ];
 
 const path = Astro.url.pathname;
+const home = withBase('/');
 const isActive = (href: string) =>
-  href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`);
+  href === home
+    ? path === home || path === withBase('')
+    : path === href || path.startsWith(`${href}/`);
 ---
 
 <header class="site-header">
   <div class="inner">
-    <a class="brand" href="/">Project<span>Hub</span></a>
+    <a class="brand" href={withBase('/')}>Project<span>Hub</span></a>
     <div class="right">
       <button
         id="nav-toggle"
