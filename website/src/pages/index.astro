@@ -4,6 +4,7 @@ import Container from '../components/Container.astro';
 import Section from '../components/Section.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import KnowledgeCard from '../components/KnowledgeCard.astro';
+import SearchBox from '../components/SearchBox.astro';
 import Tag from '../components/Tag.astro';
 import { buildContentIndex } from '../lib/content-index';
 import { sortByRecency } from '../lib/metadata';
@@ -44,6 +45,9 @@ const disciplines = ['Robotics', 'Embedded Systems', 'Electronics', 'Mechatronic
         <a class="button primary" href="/projects">Browse projects</a>
         <a class="button" href="#about">About this site</a>
       </p>
+      <div class="hero-search">
+        <SearchBox />
+      </div>
       <p class="stats" aria-label="Site statistics">
         <strong>{count}</strong> project{count === 1 ? '' : 's'} ·
         <strong>{knowledgeCount}</strong> knowledge article{knowledgeCount === 1 ? '' : 's'} ·
@@ -198,6 +202,11 @@ const disciplines = ['Robotics', 'Embedded Systems', 'Electronics', 'Mechatronic
   .button.primary:hover {
     background: var(--color-primary-strong);
     color: #ffffff;
+  }
+
+  .hero-search {
+    max-width: 28rem;
+    margin-bottom: var(--space-6);
   }
 
   .stats {

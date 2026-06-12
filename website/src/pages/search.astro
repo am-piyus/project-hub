@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/Container.astro';
+import Section from '../components/Section.astro';
+
+// Site-wide search (Droplet 0.1.5.1) — Pagefind UI over the static index
+// generated at build time. Supports ?q= deep links (e.g. from the header
+// search box). In dev mode the index doesn't exist; a notice explains that.
+---
+
+<BaseLayout
+  title="Search"
+  description="Search projects, knowledge articles, and documentation across Project Hub."
+>
+  <Container>
+    <Section
+      title="Search"
+      description="Find projects, knowledge, and documentation — titles, content, and tags."
+    >
+      <div id="search"></div>
+      <noscript>
+        <p>Search requires JavaScript.</p>
+      </noscript>
+      <p id="search-dev-note" hidden>
+        The search index is generated during the production build. Run
+        <code>npm run build &amp;&amp; npm run preview</code> to use search locally.
+      </p>
+    </Section>
+  </Container>
+</BaseLayout>
+
+<script is:inline>
+  (async () => {
+    try {
+      // Pagefind assets exist only in build output.
+      const [{ PagefindUI }] = await Promise.all([
+        import('/pagefind/pagefind-ui.js'),
+        new Promise((resolve) => {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = '/pagefind/pagefind-ui.css';
+          link.onload = resolve;
+          link.onerror = resolve;
+          document.head.appendChild(link);
+        }),
+      ]);
+      const ui = new PagefindUI({
+        element: '#search',
+        showSubResults: true,
+        showImages: false,
+        pageSize: 8,
+      });
+      // Deep link: /search?q=term
+      const q = new URLSearchParams(location.search).get('q');
+      if (q) ui.triggerSearch(q);
+    } catch {
+      document.getElementById('search-dev-note')?.removeAttribute('hidden');
+    }
+  })();
+</script>
+
+<style is:global>
+  /* Map Pagefind UI onto the design system tokens (light + dark) */
+  #search {
+    --pagefind-ui-scale: 0.9;
+    --pagefind-ui-primary: var(--color-primary);
+    --pagefind-ui-text: var(--color-text);
+    --pagefind-ui-background: var(--color-surface);
+    --pagefind-ui-border: var(--color-border-strong);
+    --pagefind-ui-tag: var(--color-surface-alt);
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: var(--radius);
+    --pagefind-ui-font: var(--font-sans);
+    max-width: var(--width-content);
+  }
+
+  #search .pagefind-ui__result-link {
+    color: var(--color-primary);
+  }
+
+  #search .pagefind-ui__result-excerpt {
+    color: var(--color-text-secondary);
+  }
+
+  #search mark {
+    background: var(--color-primary-subtle);
+    color: var(--color-primary-strong);
+    border-radius: 2px;
+  }
+</style>

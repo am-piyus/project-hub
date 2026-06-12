@@ -45,7 +45,7 @@ const hasRelated = relatedProjects.length > 0 || relatedKnowledge.length > 0;
     </div>
     <div class="page">
       <TableOfContents headings={headings} />
-      <article>
+      <article data-pagefind-body>
         <header>
           <h1>{article.title}</h1>
           {readingMinutes && <p class="reading-time">{readingMinutes} min read</p>}
