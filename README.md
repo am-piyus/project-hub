@@ -2,7 +2,8 @@
 
 > A documentation publishing platform that transforms engineering project knowledge into structured, reusable, and publicly accessible documentation.
 
-**Version:** 0.1 (Prototype) · **Constellation:** am-piyus · **Status:** Planned
+**Version:** V0.1 (Orbit 0.1) · **Constellation:** am-piyus · **Status:** Released — frozen baseline
+**Live site:** https://am-piyus.github.io/project-hub/ · **Release notes:** [Orbit 0.1](docs/Orbit_0.1_Release_Notes.md)
 
 ---
 
