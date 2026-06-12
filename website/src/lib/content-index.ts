@@ -13,6 +13,7 @@
 import { getCollection } from 'astro:content';
 import { extractMetadata, type ProjectMetadata } from './metadata';
 import { extractKnowledgeMetadata, type KnowledgeMetadata } from './knowledge';
+import { buildTagRegistry, type TagRecord } from './discovery';
 
 export interface ContentIndex {
   count: number;
@@ -21,6 +22,8 @@ export interface ContentIndex {
   knowledge: KnowledgeMetadata[];
   urls: Record<string, string>;
   tags: Record<string, string[]>;
+  /** Tag discovery registry — drives the generated /tags pages (0.1.5.2). */
+  tagRegistry: TagRecord[];
 }
 
 /** Build the content index from the projects and knowledge collections. */
@@ -51,5 +54,6 @@ export async function buildContentIndex(): Promise<ContentIndex> {
     knowledge,
     urls,
     tags,
+    tagRegistry: buildTagRegistry(projects, knowledge),
   };
 }

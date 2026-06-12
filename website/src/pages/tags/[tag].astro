@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import KnowledgeCard from '../../components/KnowledgeCard.astro';
+import { buildContentIndex } from '../../lib/content-index';
+import type { TagRecord } from '../../lib/discovery';
+
+// One generated page per tag (Droplet 0.1.5.2) — aggregates every project and
+// knowledge article carrying the tag. Cross-content discovery in one place.
+export async function getStaticPaths() {
+  const { tagRegistry } = await buildContentIndex();
+  return tagRegistry.map((record) => ({
+    params: { tag: record.slug },
+    props: { record },
+  }));
+}
+
+interface Props {
+  record: TagRecord;
+}
+
+const { record } = Astro.props;
+---
+
+<BaseLayout
+  title={`Tag: ${record.tag}`}
+  description={`Projects and knowledge articles tagged "${record.tag}" on Project Hub.`}
+>
+  <Container>
+    <div class="crumbs">
+      <Breadcrumb
+        items={[{ label: 'Home', href: '/' }, { label: 'Tags', href: '/tags' }, { label: record.tag }]}
+      />
+    </div>
+    <Section
+      title={`#${record.tag}`}
+      description={`${record.count} item${record.count === 1 ? '' : 's'} share this topic.`}
+    >
+      {
+        record.projects.length > 0 && (
+          <div class="group">
+            <h3>Projects ({record.projects.length})</h3>
+            <div class="grid">
+              {record.projects.map((project) => (
+                <ProjectCard project={project} />
+              ))}
+            </div>
+          </div>
+        )
+      }
+      {
+        record.knowledge.length > 0 && (
+          <div class="group">
+            <h3>Knowledge ({record.knowledge.length})</h3>
+            <div class="grid">
+              {record.knowledge.map((article) => (
+                <KnowledgeCard
+                  title={article.title}
+                  url={article.url}
+                  summary={article.summary}
+                  category={article.category}
+                  tags={article.tags}
+                />
+              ))}
+            </div>
+          </div>
+        )
+      }
+      <p class="back-link"><a href="/tags">← All tags</a></p>
+    </Section>
+  </Container>
+</BaseLayout>
+
+<style>
+  .crumbs {
+    margin-bottom: var(--space-6);
+  }
+
+  .group {
+    margin-bottom: var(--space-8);
+  }
+
+  .group h3 {
+    margin-bottom: var(--space-4);
+    color: var(--color-text-secondary);
+    font-size: var(--text-lg);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 40rem) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .back-link {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    margin: 0;
+  }
+</style>

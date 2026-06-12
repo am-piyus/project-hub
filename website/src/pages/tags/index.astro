@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import { buildContentIndex } from '../../lib/content-index';
+
+// Tag index (Droplet 0.1.5.2) — every tag across projects and knowledge,
+// weighted by content count. Tags are discovery paths, not categorization.
+const { tagRegistry } = await buildContentIndex();
+---
+
+<BaseLayout
+  title="Tags"
+  description="Explore Project Hub by topic — every tag across projects and knowledge articles."
+>
+  <Container>
+    <Section
+      title="Tags"
+      description={`${tagRegistry.length} topics across projects and knowledge. A tag is a bridge between related content.`}
+    >
+      {
+        tagRegistry.length === 0 ? (
+          <p>No tags yet.</p>
+        ) : (
+          <ul class="cloud">
+            {tagRegistry.map((record) => (
+              <li>
+                <a href={record.url}>
+                  {record.tag}
+                  <span class="count">{record.count}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </Section>
+  </Container>
+</BaseLayout>
+
+<style>
+  .cloud {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .cloud a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    padding: var(--space-2) var(--space-3);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+
+  .cloud a:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .count {
+    color: var(--color-text-muted);
+    background: var(--color-surface-alt);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    padding: 0.1rem 0.45rem;
+  }
+</style>

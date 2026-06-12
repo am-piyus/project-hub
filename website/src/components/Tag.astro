@@ -1,14 +1,25 @@
 ---
-// Tag chip — topic/technology label. Becomes a filter link in the Discovery
-// System (Bucket 0.1.5); renders as a static chip until then.
+// Tag chip — topic/technology label. Since Droplet 0.1.5.2 a tag is a
+// navigable discovery path: it links to its generated /tags page. Pass
+// `linked={false}` for decorative labels that are not content tags
+// (e.g. portfolio disciplines).
+import { tagUrl } from '../lib/discovery';
+
 interface Props {
   label: string;
+  linked?: boolean;
 }
 
-const { label } = Astro.props;
+const { label, linked = true } = Astro.props;
 ---
 
-<span class="tag">{label}</span>
+{
+  linked ? (
+    <a class="tag" href={tagUrl(label)}>{label}</a>
+  ) : (
+    <span class="tag">{label}</span>
+  )
+}
 
 <style>
   .tag {
@@ -21,5 +32,11 @@ const { label } = Astro.props;
     padding: var(--space-1) var(--space-2);
     border-radius: var(--radius-sm);
     white-space: nowrap;
+  }
+
+  a.tag:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    text-decoration: none;
   }
 </style>

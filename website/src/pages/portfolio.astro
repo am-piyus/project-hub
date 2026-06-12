@@ -42,7 +42,7 @@ const futureCapabilities = [
       <p class="headline">{siteProfile.headline}</p>
       <p class="mission">{siteProfile.mission}</p>
       <div class="disciplines">
-        {siteProfile.disciplines.map((d) => <Tag label={d} />)}
+        {siteProfile.disciplines.map((d) => <Tag label={d} linked={false} />)}
       </div>
       <p class="profile-meta">
         Currently exploring: {siteProfile.exploring.join(' · ')}
