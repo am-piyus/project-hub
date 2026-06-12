@@ -1,6 +1,7 @@
 ---
 title: Sample Project
 status: Completed
+category: Documentation Systems
 date_started: 2026-06-08
 date_sealed: 2026-06-08
 sources: [claude]

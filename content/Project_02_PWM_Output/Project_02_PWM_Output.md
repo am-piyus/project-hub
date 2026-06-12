@@ -1,6 +1,7 @@
 ---
 title: Project_02_PWM_Output
 status: Completed
+category: Embedded Systems
 date_started: 2026-06-11
 date_sealed: 2026-06-11
 sources:

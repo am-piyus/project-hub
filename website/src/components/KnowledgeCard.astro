@@ -1,7 +1,8 @@
 ---
 // Knowledge card — one knowledge article in a listing (Droplet 0.1.4.4):
-// category badge, title, summary, and tags.
+// category badge (linked to its category page since 0.1.5.3), title, summary, tags.
 import Tag from './Tag.astro';
+import { categoryUrl } from '../lib/discovery';
 
 interface Props {
   title: string;
@@ -16,7 +17,7 @@ const visibleTags = tags.slice(0, 4);
 ---
 
 <article class="card">
-  {category && <p class="category">{category}</p>}
+  {category && <p class="category-row"><a class="category" href={categoryUrl(category)}>{category}</a></p>}
   <h3><a href={url}>{title}</a></h3>
   {summary && <p class="summary">{summary}</p>}
   {
@@ -44,6 +45,10 @@ const visibleTags = tags.slice(0, 4);
     border-color: var(--color-border-strong);
   }
 
+  .category-row {
+    margin: 0 0 var(--space-3);
+  }
+
   .category {
     display: inline-block;
     font-size: 0.75rem;
@@ -55,7 +60,11 @@ const visibleTags = tags.slice(0, 4);
     border-radius: 999px;
     color: var(--color-primary-strong);
     background: var(--color-primary-subtle);
-    margin: 0 0 var(--space-3);
+  }
+
+  a.category:hover {
+    text-decoration: none;
+    outline: 1px solid var(--color-primary);
   }
 
   h3 {

@@ -2,6 +2,7 @@
 title: Project_01_H757_LED_Blink
 status: Completed
 featured: true
+category: Embedded Systems
 date_started: unknown
 date_sealed: unknown
 sources:

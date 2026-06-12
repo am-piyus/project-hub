@@ -2,6 +2,7 @@
 // Metadata block — presents a project's PHDS metadata consistently at the top
 // of a project page: status, dates, sources, AI systems, and tags.
 import type { ProjectMetadata } from '../lib/metadata';
+import { categoryUrl } from '../lib/discovery';
 import StatusBadge from './StatusBadge.astro';
 import Tag from './Tag.astro';
 
@@ -24,6 +25,12 @@ if (project.aiSystems.length > 0)
 <div class="metadata">
   <div class="status-row">
     <StatusBadge status={project.status} />
+    {project.category && (
+      <span class="row">
+        <span class="label">Category</span>
+        <a href={categoryUrl(project.category)}>{project.category}</a>
+      </span>
+    )}
     {rows.map((row) => (
       <span class="row">
         <span class="label">{row.label}</span>

@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Container from '../../components/Container.astro';
+import Section from '../../components/Section.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import KnowledgeCard from '../../components/KnowledgeCard.astro';
+import { buildContentIndex } from '../../lib/content-index';
+import type { CategoryRecord } from '../../lib/discovery';
+
+// One generated page per category (Droplet 0.1.5.3) — all content belonging
+// to a knowledge domain, grouped by content type.
+export async function getStaticPaths() {
+  const { categoryRegistry } = await buildContentIndex();
+  return categoryRegistry.map((record) => ({
+    params: { category: record.slug },
+    props: { record },
+  }));
+}
+
+interface Props {
+  record: CategoryRecord;
+}
+
+const { record } = Astro.props;
+---
+
+<BaseLayout
+  title={`Category: ${record.category}`}
+  description={`Projects and knowledge articles in the ${record.category} domain on Project Hub.`}
+>
+  <Container>
+    <div class="crumbs">
+      <Breadcrumb
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Categories', href: '/categories' },
+          { label: record.category },
+        ]}
+      />
+    </div>
+    <Section
+      title={record.category}
+      description={`${record.count} item${record.count === 1 ? '' : 's'} in this domain.`}
+    >
+      {
+        record.projects.length > 0 && (
+          <div class="group">
+            <h3>Projects ({record.projects.length})</h3>
+            <div class="grid">
+              {record.projects.map((project) => (
+                <ProjectCard project={project} />
+              ))}
+            </div>
+          </div>
+        )
+      }
+      {
+        record.knowledge.length > 0 && (
+          <div class="group">
+            <h3>Knowledge ({record.knowledge.length})</h3>
+            <div class="grid">
+              {record.knowledge.map((article) => (
+                <KnowledgeCard
+                  title={article.title}
+                  url={article.url}
+                  summary={article.summary}
+                  category={article.category}
+                  tags={article.tags}
+                />
+              ))}
+            </div>
+          </div>
+        )
+      }
+      <p class="back-link"><a href="/categories">← All categories</a></p>
+    </Section>
+  </Container>
+</BaseLayout>
+
+<style>
+  .crumbs {
+    margin-bottom: var(--space-6);
+  }
+
+  .group {
+    margin-bottom: var(--space-8);
+  }
+
+  .group h3 {
+    margin-bottom: var(--space-4);
+    color: var(--color-text-secondary);
+    font-size: var(--text-lg);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 40rem) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .back-link {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    margin: 0;
+  }
+</style>

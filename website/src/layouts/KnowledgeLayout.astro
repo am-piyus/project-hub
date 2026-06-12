@@ -10,6 +10,7 @@ import Container from '../components/Container.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import Tag from '../components/Tag.astro';
 import type { KnowledgeMetadata } from '../lib/knowledge';
+import { categoryUrl } from '../lib/discovery';
 
 interface Props {
   article: KnowledgeMetadata;
@@ -51,7 +52,7 @@ const hasRelated = relatedProjects.length > 0 || relatedKnowledge.length > 0;
           {readingMinutes && <p class="reading-time">{readingMinutes} min read</p>}
           <div class="meta">
             <div class="meta-row">
-              <span class="category">{article.category}</span>
+              <a class="category" href={categoryUrl(article.category)}>{article.category}</a>
               {article.dateCreated && article.dateCreated !== 'unknown' && (
                 <span class="date">Created {article.dateCreated}</span>
               )}

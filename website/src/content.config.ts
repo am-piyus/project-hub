@@ -40,6 +40,9 @@ const projects = defineCollection({
     // Portfolio curation (Droplet 0.1.4.5): featured projects surface in the
     // portfolio's Featured Work section. One of 0.1.3.5's reserved future fields.
     featured: z.boolean().optional(),
+    // Discovery (Droplet 0.1.5.3): high-level knowledge domain. Single category
+    // per document, consistent with the knowledge collection.
+    category: z.string().optional(),
   }),
 });
 

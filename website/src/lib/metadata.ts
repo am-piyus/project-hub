@@ -24,6 +24,8 @@ export interface ProjectMetadata {
   aiSystems: string[];
   /** Surfaced in the portfolio's Featured Work section (Droplet 0.1.4.5). */
   featured: boolean;
+  /** High-level knowledge domain (Droplet 0.1.5.3). */
+  category?: string;
 }
 
 /** Extract the document summary — the first blockquote in the markdown body
@@ -61,6 +63,7 @@ export function extractMetadata(entry: CollectionEntry<'projects'>): ProjectMeta
     sources: data.sources ?? [],
     aiSystems: data.ai_systems ?? [],
     featured: data.featured ?? false,
+    category: data.category,
   };
 }
 
