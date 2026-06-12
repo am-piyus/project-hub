@@ -3,14 +3,30 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Container from '../../components/Container.astro';
 import Section from '../../components/Section.astro';
 import KnowledgeCard from '../../components/KnowledgeCard.astro';
+import ContentFilter, { type Facet } from '../../components/ContentFilter.astro';
 import { buildContentIndex } from '../../lib/content-index';
 import { sortKnowledgeByRecency } from '../../lib/knowledge';
+import { discoverySlug } from '../../lib/discovery';
 
 // Knowledge library listing (Droplet 0.1.4.4) — the central place to browse
 // engineering knowledge. Metadata-driven, newest first, with a designed
-// empty state while the library grows.
+// empty state while the library grows, and faceted filtering (0.1.5.4).
 const { knowledge, knowledgeCount } = await buildContentIndex();
 const ordered = sortKnowledgeByRecency(knowledge);
+
+const unique = (values: string[]) => {
+  const seen = new Map<string, string>();
+  for (const value of values) {
+    const slug = discoverySlug(value);
+    if (slug && !seen.has(slug)) seen.set(slug, value);
+  }
+  return [...seen.entries()].map(([value, label]) => ({ value, label }));
+};
+
+const facets: Facet[] = [
+  { name: 'tag', label: 'Tag', options: unique(ordered.flatMap((a) => a.tags)) },
+  { name: 'category', label: 'Category', options: unique(ordered.map((a) => a.category)) },
+];
 ---
 
 <BaseLayout
@@ -34,17 +50,26 @@ const ordered = sortKnowledgeByRecency(knowledge);
             </p>
           </div>
         ) : (
-          <div class="grid">
-            {ordered.map((article) => (
-              <KnowledgeCard
-                title={article.title}
-                url={article.url}
-                summary={article.summary}
-                category={article.category}
-                tags={article.tags}
-              />
-            ))}
-          </div>
+          <>
+            <ContentFilter facets={facets} />
+            <div class="grid">
+              {ordered.map((article) => (
+                <div
+                  data-filter-item
+                  data-tags={article.tags.map(discoverySlug).join(',')}
+                  data-category={discoverySlug(article.category)}
+                >
+                  <KnowledgeCard
+                    title={article.title}
+                    url={article.url}
+                    summary={article.summary}
+                    category={article.category}
+                    tags={article.tags}
+                  />
+                </div>
+              ))}
+            </div>
+          </>
         )
       }
       {knowledgeCount > 0 && (

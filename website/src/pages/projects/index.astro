@@ -3,13 +3,35 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Container from '../../components/Container.astro';
 import Section from '../../components/Section.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import ContentFilter, { type Facet } from '../../components/ContentFilter.astro';
 import { buildContentIndex } from '../../lib/content-index';
 import { sortByRecency } from '../../lib/metadata';
+import { discoverySlug } from '../../lib/discovery';
 
-// Project listing — the central place to discover all published projects
-// (Droplet 0.1.4.3). Metadata-driven from the content index, newest first.
+// Project listing — the central place to discover all published projects.
+// Metadata-driven, newest first, with faceted filtering (Droplet 0.1.5.4):
+// tag + category + status, AND-combined, URL-synced.
 const { projects, count } = await buildContentIndex();
 const ordered = sortByRecency(projects);
+
+const unique = (values: string[]) => {
+  const seen = new Map<string, string>();
+  for (const value of values) {
+    const slug = discoverySlug(value);
+    if (slug && !seen.has(slug)) seen.set(slug, value);
+  }
+  return [...seen.entries()].map(([value, label]) => ({ value, label }));
+};
+
+const facets: Facet[] = [
+  { name: 'tag', label: 'Tag', options: unique(ordered.flatMap((p) => p.tags)) },
+  {
+    name: 'category',
+    label: 'Category',
+    options: unique(ordered.flatMap((p) => (p.category ? [p.category] : []))),
+  },
+  { name: 'status', label: 'Status', options: unique(ordered.map((p) => p.status)) },
+];
 ---
 
 <BaseLayout
@@ -21,13 +43,21 @@ const ordered = sortByRecency(projects);
       title="Projects"
       description={`${count} engineering project${count === 1 ? '' : 's'}, documented end to end and published from Obsidian. Newest first.`}
     >
+      <ContentFilter facets={facets} />
       {
         ordered.length === 0 ? (
           <p>No projects published yet.</p>
         ) : (
           <div class="grid">
             {ordered.map((project) => (
-              <ProjectCard project={project} />
+              <div
+                data-filter-item
+                data-tags={project.tags.map(discoverySlug).join(',')}
+                data-category={project.category ? discoverySlug(project.category) : ''}
+                data-status={discoverySlug(project.status)}
+              >
+                <ProjectCard project={project} />
+              </div>
             ))}
           </div>
         )

@@ -44,6 +44,8 @@ const hasRelated = relatedProjects.length > 0 || relatedKnowledge.length > 0;
         ]}
       />
     </div>
+    {/* Search facet (0.1.5.4): outside the indexed body so it filters without polluting content */}
+    <span data-pagefind-filter="type" hidden>Knowledge</span>
     <div class="page">
       <TableOfContents headings={headings} />
       <article data-pagefind-body>

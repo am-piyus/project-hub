@@ -1,0 +1,170 @@
+---
+// Content filter bar (Droplet 0.1.5.4) — narrows any collection of
+// `[data-filter-item]` elements by the facets provided. Multi-filter
+// combinations AND together; active filters sync to the URL query string so
+// filtered views are shareable; a reset clears everything. Static-friendly:
+// pure client-side show/hide over build-rendered content.
+//
+// Facet contract: a facet named `tag` matches against the item's comma-
+// separated `data-tags` list; every other facet matches `data-<name>` exactly.
+// Future facets (author, difficulty, date…) are one entry in `facets`.
+export interface Facet {
+  name: string;
+  label: string;
+  options: Array<{ value: string; label: string }>;
+}
+
+interface Props {
+  facets: Facet[];
+}
+
+const { facets } = Astro.props;
+---
+
+<div class="filter-bar" data-filter-bar>
+  <span class="filter-title">Filter</span>
+  {
+    facets.map((facet) => (
+      <label>
+        <span class="sr-only">{facet.label}</span>
+        <select name={facet.name} data-filter-select aria-label={facet.label}>
+          <option value="">{facet.label}: all</option>
+          {facet.options.map((option) => (
+            <option value={option.value}>{option.label}</option>
+          ))}
+        </select>
+      </label>
+    ))
+  }
+  <button type="button" data-filter-reset hidden>Reset</button>
+  <span class="count" data-filter-count aria-live="polite"></span>
+</div>
+<p class="filter-empty" data-filter-empty hidden>
+  Nothing matches the current filters. <button type="button" data-filter-reset>Reset filters</button>
+</p>
+
+<script>
+  const bar = document.querySelector('[data-filter-bar]');
+  if (bar) {
+    const selects = [...bar.querySelectorAll<HTMLSelectElement>('[data-filter-select]')];
+    const resets = [...document.querySelectorAll<HTMLButtonElement>('[data-filter-reset]')];
+    const counter = bar.querySelector('[data-filter-count]');
+    const empty = document.querySelector<HTMLElement>('[data-filter-empty]');
+    const items = [...document.querySelectorAll<HTMLElement>('[data-filter-item]')];
+
+    const apply = (updateUrl = true) => {
+      const active = selects.filter((s) => s.value);
+      let visible = 0;
+      for (const item of items) {
+        const show = active.every((select) => {
+          const key = select.name === 'tag' ? 'tags' : select.name;
+          const value = item.dataset[key] ?? '';
+          return select.name === 'tag' ? value.split(',').includes(select.value) : value === select.value;
+        });
+        item.hidden = !show;
+        if (show) visible += 1;
+      }
+      if (counter)
+        counter.textContent = active.length
+          ? `${visible} of ${items.length} shown`
+          : '';
+      if (empty) empty.hidden = visible !== 0;
+      const barReset = bar.querySelector<HTMLButtonElement>('[data-filter-reset]');
+      if (barReset) barReset.hidden = active.length === 0;
+      if (updateUrl) {
+        const params = new URLSearchParams();
+        for (const select of active) params.set(select.name, select.value);
+        const query = params.toString();
+        history.replaceState(null, '', query ? `?${query}` : location.pathname);
+      }
+    };
+
+    // Restore filters from the URL (shareable filtered views)
+    const params = new URLSearchParams(location.search);
+    for (const select of selects) {
+      const value = params.get(select.name);
+      if (value && [...select.options].some((o) => o.value === value)) select.value = value;
+    }
+
+    for (const select of selects) select.addEventListener('change', () => apply());
+    for (const reset of resets)
+      reset.addEventListener('click', () => {
+        for (const select of selects) select.value = '';
+        apply();
+      });
+
+    apply(false);
+  }
+</script>
+
+<style>
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+  }
+
+  .filter-title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  select {
+    font: inherit;
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    padding: var(--space-1) var(--space-2);
+    max-width: 14rem;
+  }
+
+  button {
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-primary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--space-1);
+  }
+
+  button:hover {
+    text-decoration: underline;
+  }
+
+  .count {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-left: auto;
+  }
+
+  .filter-empty {
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    padding: var(--space-6);
+    color: var(--color-text-secondary);
+  }
+
+  .filter-empty button {
+    font: inherit;
+    font-weight: 600;
+    color: var(--color-primary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+</style>

@@ -13,9 +13,10 @@ interface Props {
 const { label, linked = true } = Astro.props;
 ---
 
+{/* data-pagefind-filter exposes the tag as a "Tag" facet inside site search (0.1.5.4) */}
 {
   linked ? (
-    <a class="tag" href={tagUrl(label)}>{label}</a>
+    <a class="tag" href={tagUrl(label)} data-pagefind-filter="tag">{label}</a>
   ) : (
     <span class="tag">{label}</span>
   )

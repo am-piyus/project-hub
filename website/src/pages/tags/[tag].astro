@@ -5,6 +5,7 @@ import Container from '../../components/Container.astro';
 import Section from '../../components/Section.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import KnowledgeCard from '../../components/KnowledgeCard.astro';
+import ContentFilter, { type Facet } from '../../components/ContentFilter.astro';
 import { buildContentIndex } from '../../lib/content-index';
 import type { TagRecord } from '../../lib/discovery';
 
@@ -23,6 +24,21 @@ interface Props {
 }
 
 const { record } = Astro.props;
+
+// Content-type filter (0.1.5.4) — only when both types are present.
+const typeFacet: Facet[] =
+  record.projects.length > 0 && record.knowledge.length > 0
+    ? [
+        {
+          name: 'type',
+          label: 'Type',
+          options: [
+            { value: 'project', label: 'Projects' },
+            { value: 'knowledge', label: 'Knowledge' },
+          ],
+        },
+      ]
+    : [];
 ---
 
 <BaseLayout
@@ -39,9 +55,10 @@ const { record } = Astro.props;
       title={`#${record.tag}`}
       description={`${record.count} item${record.count === 1 ? '' : 's'} share this topic.`}
     >
+      {typeFacet.length > 0 && <ContentFilter facets={typeFacet} />}
       {
         record.projects.length > 0 && (
-          <div class="group">
+          <div class="group" data-filter-item data-type="project">
             <h3>Projects ({record.projects.length})</h3>
             <div class="grid">
               {record.projects.map((project) => (
@@ -53,7 +70,7 @@ const { record } = Astro.props;
       }
       {
         record.knowledge.length > 0 && (
-          <div class="group">
+          <div class="group" data-filter-item data-type="knowledge">
             <h3>Knowledge ({record.knowledge.length})</h3>
             <div class="grid">
               {record.knowledge.map((article) => (

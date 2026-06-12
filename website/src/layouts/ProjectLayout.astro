@@ -35,6 +35,8 @@ const description = project.summary ?? `${project.title} — engineering project
         ]}
       />
     </div>
+    {/* Search facet (0.1.5.4): outside the indexed body so it filters without polluting content */}
+    <span data-pagefind-filter="type" hidden>Project</span>
     <div class="page">
       <TableOfContents headings={headings} />
       <article id="doc" data-pagefind-body>
