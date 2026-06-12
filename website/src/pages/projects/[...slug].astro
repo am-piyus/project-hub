@@ -2,26 +2,41 @@
 import { getCollection, render } from 'astro:content';
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
 import { extractMetadata, sortByRecency } from '../../lib/metadata';
+import { extractKnowledgeMetadata } from '../../lib/knowledge';
+import { relatedKnowledgeFor, relatedProjectsFor } from '../../lib/related';
 
 // One static route per project folder discovered under content/.
-// prev/next walk the recency-sorted project sequence (newer ← → older).
+// prev/next walk the recency-sorted project sequence (newer ← → older);
+// related content (0.1.5.5) is computed from shared tags and category.
 export async function getStaticPaths() {
-  const entries = await getCollection('projects');
-  const ordered = sortByRecency(entries.map(extractMetadata));
+  const [entries, knowledgeEntries] = await Promise.all([
+    getCollection('projects'),
+    getCollection('knowledge'),
+  ]);
+  const all = entries.map(extractMetadata);
+  const ordered = sortByRecency(all);
+  const knowledge = knowledgeEntries.map(extractKnowledgeMetadata);
+
   return entries.map((entry) => {
     const index = ordered.findIndex((p) => p.slug === entry.id);
+    const me = ordered[index];
     return {
       params: { slug: entry.id },
       props: {
         entry,
         prev: index > 0 ? ordered[index - 1] : undefined,
         next: index < ordered.length - 1 ? ordered[index + 1] : undefined,
+        relatedProjects: relatedProjectsFor(me, all).map((p) => ({ title: p.title, url: p.url })),
+        relatedKnowledge: relatedKnowledgeFor(me, knowledge).map((k) => ({
+          title: k.title,
+          url: k.url,
+        })),
       },
     };
   });
 }
 
-const { entry, prev, next } = Astro.props;
+const { entry, prev, next, relatedProjects, relatedKnowledge } = Astro.props;
 // Render the PHDS markdown body to HTML; headings feed the table of contents.
 const { Content, headings } = await render(entry);
 const project = extractMetadata(entry);
@@ -30,6 +45,6 @@ const words = entry.body ? entry.body.split(/\s+/).length : 0;
 const readingMinutes = words > 0 ? Math.max(1, Math.round(words / 220)) : undefined;
 ---
 
-<ProjectLayout {project} {headings} {readingMinutes} {prev} {next}>
+<ProjectLayout {project} {headings} {readingMinutes} {prev} {next} {relatedProjects} {relatedKnowledge}>
   <Content />
 </ProjectLayout>

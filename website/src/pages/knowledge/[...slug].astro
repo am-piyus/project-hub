@@ -4,30 +4,51 @@ import KnowledgeLayout from '../../layouts/KnowledgeLayout.astro';
 import { extractKnowledgeMetadata, knowledgeUrl } from '../../lib/knowledge';
 import { extractMetadata } from '../../lib/metadata';
 import { projectUrl } from '../../lib/url-generator';
+import { relatedKnowledgeFor, relatedProjectsFor } from '../../lib/related';
 
 // One static route per knowledge article folder discovered under knowledge/.
-// Related-content links resolve against the real collections, so only targets
-// that actually exist are rendered (knowledge ↔ project relationship foundation).
+// Related content = explicit frontmatter relations first (author intent),
+// then the metadata-driven engine (0.1.5.5) fills remaining slots — deduped,
+// never self-referencing.
 export async function getStaticPaths() {
   const [articles, projects] = await Promise.all([
     getCollection('knowledge'),
     getCollection('projects'),
   ]);
-  const projectTitles = new Map(projects.map((p) => [p.id, extractMetadata(p).title]));
-  const articleTitles = new Map(articles.map((a) => [a.id, a.data.title]));
+  const projectMeta = projects.map(extractMetadata);
+  const articleMeta = articles.map(extractKnowledgeMetadata);
+  const projectTitles = new Map(projectMeta.map((p) => [p.slug, p.title]));
+  const articleTitles = new Map(articleMeta.map((a) => [a.slug, a.title]));
 
   return articles.map((entry) => {
     const meta = extractKnowledgeMetadata(entry);
+
+    // Explicit relations from frontmatter (only targets that exist)
+    const explicitProjects = meta.relatedProjects
+      .filter((slug) => projectTitles.has(slug))
+      .map((slug) => ({ slug, title: projectTitles.get(slug) ?? slug, url: projectUrl(slug) }));
+    const explicitKnowledge = meta.relatedKnowledge
+      .filter((slug) => slug !== entry.id && articleTitles.has(slug))
+      .map((slug) => ({ slug, title: articleTitles.get(slug) ?? slug, url: knowledgeUrl(slug) }));
+
+    // Computed relations fill the remaining slots (excluding explicit picks)
+    const computedProjects = relatedProjectsFor(
+      meta,
+      projectMeta,
+      new Set(explicitProjects.map((p) => p.slug)),
+    ).map((p) => ({ slug: p.slug, title: p.title, url: p.url }));
+    const computedKnowledge = relatedKnowledgeFor(
+      meta,
+      articleMeta,
+      new Set(explicitKnowledge.map((k) => k.slug)),
+    ).map((k) => ({ slug: k.slug, title: k.title, url: k.url }));
+
     return {
       params: { slug: entry.id },
       props: {
         entry,
-        relatedProjects: meta.relatedProjects
-          .filter((slug) => projectTitles.has(slug))
-          .map((slug) => ({ title: projectTitles.get(slug) ?? slug, url: projectUrl(slug) })),
-        relatedKnowledge: meta.relatedKnowledge
-          .filter((slug) => slug !== entry.id && articleTitles.has(slug))
-          .map((slug) => ({ title: articleTitles.get(slug) ?? slug, url: knowledgeUrl(slug) })),
+        relatedProjects: [...explicitProjects, ...computedProjects].slice(0, 3),
+        relatedKnowledge: [...explicitKnowledge, ...computedKnowledge].slice(0, 3),
       },
     };
   });

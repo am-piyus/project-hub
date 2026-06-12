@@ -17,9 +17,21 @@ interface Props {
   readingMinutes?: number;
   prev?: ProjectMetadata;
   next?: ProjectMetadata;
+  /** Related content (0.1.5.5) — metadata-driven, no dead ends. */
+  relatedProjects?: Array<{ title: string; url: string }>;
+  relatedKnowledge?: Array<{ title: string; url: string }>;
 }
 
-const { project, headings = [], readingMinutes, prev, next } = Astro.props;
+const {
+  project,
+  headings = [],
+  readingMinutes,
+  prev,
+  next,
+  relatedProjects = [],
+  relatedKnowledge = [],
+} = Astro.props;
+const hasRelated = relatedProjects.length > 0 || relatedKnowledge.length > 0;
 const description = project.summary ?? `${project.title} — engineering project documentation.`;
 ---
 
@@ -52,6 +64,36 @@ const description = project.summary ?? `${project.title} — engineering project
         </div>
         <footer class="doc-footer">
           <p class="top"><a href="#main">↑ Back to top</a></p>
+          {
+            hasRelated && (
+              <nav class="related" aria-label="Related content">
+                {relatedProjects.length > 0 && (
+                  <div>
+                    <p class="related-title">Related projects</p>
+                    <ul>
+                      {relatedProjects.map((item) => (
+                        <li>
+                          <a href={item.url}>{item.title}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {relatedKnowledge.length > 0 && (
+                  <div>
+                    <p class="related-title">Related knowledge</p>
+                    <ul>
+                      {relatedKnowledge.map((item) => (
+                        <li>
+                          <a href={item.url}>{item.title}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </nav>
+            )
+          }
           {
             (prev || next) && (
               <nav class="project-nav" aria-label="Project navigation">
@@ -120,6 +162,39 @@ const description = project.summary ?? `${project.title} — engineering project
     margin-top: var(--space-12);
     padding-top: var(--space-6);
     border-top: 1px solid var(--color-border);
+  }
+
+  .related {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    margin-bottom: var(--space-6);
+  }
+
+  @media (min-width: 40rem) {
+    .related {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .related-title {
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-2);
+  }
+
+  .related ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .related li {
+    margin-bottom: var(--space-2);
+    font-size: var(--text-sm);
   }
 
   .top {
