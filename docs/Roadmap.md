@@ -33,9 +33,9 @@
 | 0.1.1 – Product Definition | Vision, scope, workflow, requirements, success criteria. | ✅ Complete |
 | 0.1.2 – Documentation Workflow | Extraction → refinement engine → manual refinement → Obsidian storage (PHDS). | ✅ Complete |
 | 0.1.3 – Publishing Engine | Markdown → webpages; resources, links, metadata, content index, build. | ✅ Complete — frozen V0.1 baseline |
-| 0.1.4 – Website Interface | Homepage, project/knowledge/portfolio pages, navigation. | ▶ Next |
-| 0.1.5 – Discovery System | Search, tags, categories, filtering. | Planned |
-| 0.1.6 – Deployment Pipeline | Obsidian → GitHub → Project Hub; automate and validate end-to-end. | Planned |
+| 0.1.4 – Website Interface | Homepage, project/knowledge/portfolio pages, navigation. | ✅ Complete |
+| 0.1.5 – Discovery System | Search, tags, categories, filtering, related content. | ✅ Complete — frozen V0.1 baseline |
+| 0.1.6 – Deployment Pipeline | Obsidian → GitHub → Project Hub; automate and validate end-to-end. | ▶ Next |
 
 ## 3. Beyond Orbit 0.1 — Next Orbit Priorities
 

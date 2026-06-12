@@ -86,7 +86,8 @@ export default function projectResources(options = {}) {
           let folders;
           try {
             folders = (await fs.readdir(sourceRoot, { withFileTypes: true }))
-              .filter((entry) => entry.isDirectory())
+              // dot-folders (e.g. .obsidian vault config) are not content
+              .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
               .map((entry) => entry.name);
           } catch {
             // A missing root (e.g. an empty knowledge library) is a valid state.

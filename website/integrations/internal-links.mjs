@@ -21,7 +21,8 @@ const WIKILINK_RE = /\[\[([^\]|]+?)(?:\|([^\]]+?))?\]\]/g;
 async function listFolders(dir) {
   try {
     return (await fs.readdir(dir, { withFileTypes: true }))
-      .filter((entry) => entry.isDirectory())
+      // dot-folders (e.g. .obsidian vault config) are not content
+      .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
       .map((entry) => entry.name);
   } catch {
     return null;

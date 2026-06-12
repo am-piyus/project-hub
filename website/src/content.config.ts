@@ -22,7 +22,8 @@ const phdsDate = z
 // the entry id, which drives a clean `/projects/<Project_Name>` route.
 const projects = defineCollection({
   loader: glob({
-    pattern: '**/*.md',
+    // dot-folders (e.g. .obsidian vault config) are not content
+    pattern: ['**/*.md', '!**/.*/**'],
     base: '../content',
     // id = the project folder name (first path segment), preserving its exact casing.
     generateId: ({ entry }) => entry.split('/')[0],
@@ -52,7 +53,8 @@ const projects = defineCollection({
 // "what was built". Routes render at /knowledge/<Article> (Droplet 0.1.4.4).
 const knowledge = defineCollection({
   loader: glob({
-    pattern: '**/*.md',
+    // dot-folders (e.g. .obsidian vault config) are not content
+    pattern: ['**/*.md', '!**/.*/**'],
     base: '../knowledge',
     generateId: ({ entry }) => entry.split('/')[0],
   }),
