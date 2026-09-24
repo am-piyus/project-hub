@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#c2185b">
+<title>Beti Bachao Beti Padhao — Quiz Prep</title>
+<meta name="description" content="Youth Conclave quiz preparation: notes, Q&A and a practice question bank on Beti Bachao Beti Padhao, girl-child schemes, laws and famous women.">
+<style>
+:root{--pink:#c2185b;--pink-l:#fce4ec;--ink:#1f2933;--mute:#5f6b7a;--bg:#faf7f9;--card:#fff;--ok:#2e7d32;--ok-l:#e8f5e9;--bad:#c62828;--bad-l:#ffebee;--line:#e6dfe3;--r:14px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:16px}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+header{background:linear-gradient(135deg,#ad1457,#e91e63);color:#fff;padding:18px 16px 14px;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+header h1{margin:0;font-size:1.15rem;font-weight:700;letter-spacing:.2px}
+header p{margin:4px 0 0;font-size:.8rem;opacity:.92}
+main{max-width:720px;margin:0 auto;padding:14px 12px 20px}
+.view{display:none}.view.on{display:block}
+nav.tabs{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;z-index:6;padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs button{flex:1;border:0;background:none;padding:10px 4px 8px;font-size:.72rem;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+nav.tabs button span.i{font-size:1.25rem;line-height:1}
+nav.tabs button.on{color:var(--pink);font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:0 0 12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+h2{font-size:1.05rem;margin:0 0 8px;color:var(--pink)}
+h3{font-size:.95rem;margin:14px 0 6px}
+details{border:1px solid var(--line);border-radius:var(--r);background:#fff;margin:0 0 10px;overflow:hidden}
+details summary{padding:13px 14px;font-weight:700;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;font-size:.98rem}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";color:var(--pink);font-size:1.3rem;font-weight:400}
+details[open] summary::after{content:"–"}
+details .body{padding:0 14px 14px;font-size:.93rem}
+details .body ul{padding-left:18px;margin:6px 0}
+details .body li{margin:4px 0}
+details .body table{width:100%;border-collapse:collapse;font-size:.85rem;margin:8px 0}
+details .body td,details .body th{border:1px solid var(--line);padding:6px 7px;text-align:left;vertical-align:top}
+details .body th{background:var(--pink-l)}
+.key{background:var(--pink-l);border-left:4px solid var(--pink);padding:8px 10px;border-radius:6px;margin:8px 0;font-size:.9rem}
+b.n{color:var(--pink)}
+.fc{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;margin:0 0 10px;cursor:pointer}
+.fc .q{font-weight:600;font-size:.95rem}
+.fc .a{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:#333;font-size:.92rem}
+.fc.open .a{display:block}
+.fc .hint{font-size:.72rem;color:var(--mute);margin-top:6px}
+.fc.open .hint{display:none}
+.filter{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
+.filter::-webkit-scrollbar{display:none}
+.filter button{flex:0 0 auto;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:.8rem;color:var(--ink);cursor:pointer}
+.filter button.on{background:var(--pink);color:#fff;border-color:var(--pink)}
+.btn{display:inline-block;border:0;background:var(--pink);color:#fff;font-weight:700;font-size:.95rem;padding:12px 18px;border-radius:12px;cursor:pointer;width:100%;margin-top:8px}
+.btn.sec{background:#fff;color:var(--pink);border:2px solid var(--pink)}
+.btn:disabled{opacity:.5}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0;font-size:.95rem;cursor:pointer;color:var(--ink)}
+.opt .l{display:inline-block;width:24px;font-weight:700;color:var(--pink)}
+.opt.ok{border-color:var(--ok);background:var(--ok-l)}
+.opt.bad{border-color:var(--bad);background:var(--bad-l)}
+.opt:disabled{cursor:default}
+.prog{height:6px;background:var(--line);border-radius:3px;margin:8px 0 12px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--pink);width:0;transition:width .25s}
+.meta{display:flex;justify-content:space-between;font-size:.8rem;color:var(--mute)}
+.exp{margin-top:10px;padding:10px 12px;border-radius:10px;font-size:.9rem;display:none}
+.exp.ok{background:var(--ok-l);color:#1b5e20;display:block}
+.exp.bad{background:var(--bad-l);color:#b71c1c;display:block}
+.score{font-size:2.4rem;font-weight:800;color:var(--pink);text-align:center;margin:6px 0}
+.row{display:flex;gap:8px}.row .btn{margin-top:8px}
+select{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);font-size:.95rem;background:#fff;margin:6px 0 4px}
+label{font-size:.85rem;color:var(--mute);font-weight:600}
+.wrong li{margin:6px 0;font-size:.88rem}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+.stat div{background:var(--pink-l);border-radius:10px;padding:8px;text-align:center}
+.stat b{display:block;font-size:1.2rem;color:var(--pink)}
+.stat small{font-size:.7rem;color:var(--mute)}
+footer{font-size:.72rem;color:var(--mute);text-align:center;padding:10px 0 0}
+.search{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);font-size:.95rem;margin-bottom:10px;background:#fff}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎀 Beti Bachao Beti Padhao — Quiz Prep</h1>
+  <p>Youth Conclave · Govt. Autonomous College, Phulbani · 25 Sept 2026</p>
+</header>
+
+<main>
+<section id="v-learn" class="view on">
+  <input class="search" id="learnSearch" placeholder="🔍 Search notes (e.g. Panipat, 1098, Subhadra)…">
+  <div id="notes"></div>
+</section>
+
+<section id="v-qa" class="view">
+  <div class="card" style="padding:10px 14px"><b>Tap a question</b> to reveal the answer. Read these 2–3 times — short facts stick.</div>
+  <div class="filter" id="qaFilter"></div>
+  <div id="qaList"></div>
+</section>
+
+<section id="v-quiz" class="view">
+  <div id="quizHome">
+    <div class="card">
+      <h2>Practice Quiz</h2>
+      <div class="stat" id="stats"></div>
+      <label>Topic</label>
+      <select id="qTopic"></select>
+      <label>Number of questions</label>
+      <select id="qCount"><option value="10">10 — quick round</option><option value="20" selected>20 — standard</option><option value="40">40 — long</option><option value="all">All questions</option></select>
+      <button class="btn" id="startBtn">Start Quiz ▶</button>
+      <button class="btn sec" id="wrongBtn">Retry my wrong answers</button>
+    </div>
+  </div>
+  <div id="quizRun" style="display:none">
+    <div class="card">
+      <div class="meta"><span id="qNum"></span><span id="qScore"></span></div>
+      <div class="prog"><i id="qProg"></i></div>
+      <div id="qText" style="font-weight:600;font-size:1rem;margin-bottom:6px"></div>
+      <div id="qOpts"></div>
+      <div class="exp" id="qExp"></div>
+      <button class="btn" id="nextBtn" style="display:none">Next →</button>
+    </div>
+    <button class="btn sec" id="quitBtn">Quit</button>
+  </div>
+  <div id="quizEnd" style="display:none">
+    <div class="card">
+      <h2>Result</h2>
+      <div class="score" id="finalScore"></div>
+      <p id="finalMsg" style="text-align:center;margin:0 0 8px"></p>
+      <h3>Review wrong answers</h3>
+      <ul class="wrong" id="wrongList"></ul>
+      <div class="row"><button class="btn" id="againBtn">Play again</button><button class="btn sec" id="homeBtn">Home</button></div>
+    </div>
+  </div>
+</section>
+
+<section id="v-rapid" class="view">
+  <div class="card" style="padding:10px 14px"><b>Rapid fire.</b> Cover the answer, say it aloud, tap to check. Best done the night before.</div>
+  <div id="rapidList"></div>
+</section>
+
+<footer>Made for Archita · Beti Bachao Beti Padhao Youth Conclave · Sources: MWCD, PIB, NFHS-5, Census 2011, Govt. of Odisha</footer>
+</main>
+
+<nav class="tabs">
+  <button data-v="learn" class="on"><span class="i">📘</span>Learn</button>
+  <button data-v="qa"><span class="i">💬</span>Q&amp;A</button>
+  <button data-v="quiz"><span class="i">🎯</span>Practice</button>
+  <button data-v="rapid"><span class="i">⚡</span>Rapid</button>
+</nav>
+
+<script src="data.js"></script>
+<script>
+(function(){
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+$$('nav.tabs button').forEach(b=>b.onclick=()=>{ $$('nav.tabs button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); $$('.view').forEach(v=>v.classList.remove('on')); $('#v-'+b.dataset.v).classList.add('on'); window.scrollTo(0,0); });
+
+function renderNotes(q){ q=(q||'').toLowerCase(); $('#notes').innerHTML=NOTES.filter(n=>!q||(n.title+' '+n.html).toLowerCase().includes(q)).map(n=>'<details '+(q?'open':'')+'><summary>'+n.title+'</summary><div class="body">'+n.html+'</div></details>').join('')||'<div class="card">No match.</div>'; }
+renderNotes(''); $('#learnSearch').oninput=e=>renderNotes(e.target.value);
+
+const cats=['All',...new Set(QA.map(x=>x.c))]; let qaCat='All';
+$('#qaFilter').innerHTML=cats.map(c=>'<button class="'+(c==='All'?'on':'')+'" data-c="'+c+'">'+c+'</button>').join('');
+function renderQA(){ $('#qaList').innerHTML=QA.filter(x=>qaCat==='All'||x.c===qaCat).map((x,i)=>'<div class="fc"><div class="q">'+(i+1)+'. '+x.q+'</div><div class="hint">tap to reveal</div><div class="a">'+x.a+'</div></div>').join(''); }
+$('#qaFilter').onclick=e=>{ const b=e.target.closest('button'); if(!b)return; qaCat=b.dataset.c; $$('#qaFilter button').forEach(x=>x.classList.toggle('on',x===b)); renderQA(); };
+$('#qaList').onclick=e=>{ const c=e.target.closest('.fc'); if(c)c.classList.toggle('open'); };
+renderQA();
+
+$('#rapidList').innerHTML=RAPID.map((x,i)=>'<div class="fc"><div class="q">'+(i+1)+'. '+x[0]+'</div><div class="hint">tap to reveal</div><div class="a"><b>'+x[1]+'</b></div></div>').join('');
+$('#rapidList').onclick=e=>{ const c=e.target.closest('.fc'); if(c)c.classList.toggle('open'); };
+
+const topics=['All topics',...new Set(MCQ.map(x=>x.t))];
+$('#qTopic').innerHTML=topics.map(t=>'<option>'+t+'</option>').join('');
+const LS='bbbp_quiz_v1'; let store=JSON.parse(localStorage.getItem(LS)||'{"played":0,"correct":0,"total":0,"wrong":[]}');
+function save(){localStorage.setItem(LS,JSON.stringify(store));}
+function stats(){ $('#stats').innerHTML='<div><b>'+MCQ.length+'</b><small>questions</small></div><div><b>'+(store.total?Math.round(100*store.correct/store.total):0)+'%</b><small>accuracy</small></div><div><b>'+store.wrong.length+'</b><small>to revise</small></div>'; $('#wrongBtn').disabled=!store.wrong.length; }
+stats();
+let set=[],idx=0,score=0,wrong=[];
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function start(list){ if(!list.length)return; set=list; idx=0; score=0; wrong=[]; $('#quizHome').style.display='none'; $('#quizEnd').style.display='none'; $('#quizRun').style.display='block'; show(); window.scrollTo(0,0); }
+$('#startBtn').onclick=()=>{ const t=$('#qTopic').value, n=$('#qCount').value; let pool=MCQ.map((q,i)=>Object.assign({},q,{id:i})).filter(q=>t==='All topics'||q.t===t); pool=shuffle(pool); if(n!=='all')pool=pool.slice(0,+n); start(pool); };
+$('#wrongBtn').onclick=()=>{ start(shuffle(store.wrong.filter(i=>MCQ[i]).map(i=>Object.assign({},MCQ[i],{id:i})))); };
+function show(){ const q=set[idx]; $('#qNum').textContent='Question '+(idx+1)+' / '+set.length; $('#qScore').textContent='Score '+score; $('#qProg').style.width=(100*idx/set.length)+'%'; $('#qText').textContent=q.q; $('#qExp').className='exp'; $('#nextBtn').style.display='none';
+  const L='ABCD'; $('#qOpts').innerHTML=q.o.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="l">'+L[i]+'</span>'+o+'</button>').join(''); }
+$('#qOpts').onclick=e=>{ const b=e.target.closest('.opt'); if(!b||b.disabled)return; const q=set[idx], i=+b.dataset.i; $$('.opt').forEach(x=>x.disabled=true); $$('.opt')[q.a].classList.add('ok'); store.total++;
+  if(i===q.a){score++;store.correct++;b.classList.add('ok');$('#qExp').className='exp ok';$('#qExp').innerHTML='✅ Correct. '+(q.e||''); store.wrong=store.wrong.filter(x=>x!==q.id);}
+  else{b.classList.add('bad');$('#qExp').className='exp bad';$('#qExp').innerHTML='❌ Answer: <b>'+q.o[q.a]+'</b>. '+(q.e||''); wrong.push(q); if(!store.wrong.includes(q.id))store.wrong.push(q.id);}
+  save(); $('#qScore').textContent='Score '+score; $('#nextBtn').style.display='block'; $('#nextBtn').textContent=idx+1<set.length?'Next →':'See result'; };
+$('#nextBtn').onclick=()=>{ idx++; if(idx<set.length){show();window.scrollTo(0,0);}else end(); };
+function end(){ store.played++; save(); stats(); $('#quizRun').style.display='none'; $('#quizEnd').style.display='block'; const p=Math.round(100*score/set.length); $('#finalScore').textContent=score+' / '+set.length; $('#finalMsg').textContent=p>=90?'Excellent — you are ready! 🏆':p>=70?'Good. Revise the wrong ones and go again.':p>=50?'Half way. Read the Learn tab once more.':'Start with the Q&A tab, then come back.'; $('#wrongList').innerHTML=wrong.length?wrong.map(q=>'<li><b>'+q.q+'</b><br>→ '+q.o[q.a]+(q.e?' — '+q.e:'')+'</li>').join(''):'<li>None — perfect round! 🎉</li>'; window.scrollTo(0,0); }
+$('#againBtn').onclick=()=>$('#startBtn').click();
+$('#homeBtn').onclick=$('#quitBtn').onclick=()=>{ $('#quizRun').style.display='none'; $('#quizEnd').style.display='none'; $('#quizHome').style.display='block'; stats(); };
+})();
+</script>
+</body>
+</html>
