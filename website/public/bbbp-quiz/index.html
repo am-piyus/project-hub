@@ -96,6 +96,8 @@ footer{font-size:.72rem;color:var(--mute);text-align:center;padding:10px 0 0}
     <div class="card">
       <h2>Practice Quiz</h2>
       <div class="stat" id="stats"></div>
+      <label>Quiz mode</label>
+      <select id="qMode"><option value="mcq">With options — 4 choices (start here)</option><option value="recall">Without options — recall the answer like a real quiz</option></select>
       <label>Topic</label>
       <select id="qTopic"></select>
       <label>Number of questions</label>
@@ -110,6 +112,11 @@ footer{font-size:.72rem;color:var(--mute);text-align:center;padding:10px 0 0}
       <div class="prog"><i id="qProg"></i></div>
       <div id="qText" style="font-weight:600;font-size:1rem;margin-bottom:6px"></div>
       <div id="qOpts"></div>
+      <div id="qRecall" style="display:none">
+        <button class="btn sec" id="revealBtn">Show answer</button>
+        <div class="exp ok" id="qAns" style="display:none"></div>
+        <div class="row" id="selfMark" style="display:none"><button class="btn" id="gotBtn" style="background:var(--ok)">✔ I got it</button><button class="btn" id="missBtn" style="background:var(--bad)">✘ I missed it</button></div>
+      </div>
       <div class="exp" id="qExp"></div>
       <button class="btn" id="nextBtn" style="display:none">Next →</button>
     </div>
@@ -167,13 +174,18 @@ const LS='bbbp_quiz_v1'; let store=JSON.parse(localStorage.getItem(LS)||'{"playe
 function save(){localStorage.setItem(LS,JSON.stringify(store));}
 function stats(){ $('#stats').innerHTML='<div><b>'+MCQ.length+'</b><small>questions</small></div><div><b>'+(store.total?Math.round(100*store.correct/store.total):0)+'%</b><small>accuracy</small></div><div><b>'+store.wrong.length+'</b><small>to revise</small></div>'; $('#wrongBtn').disabled=!store.wrong.length; }
 stats();
-let set=[],idx=0,score=0,wrong=[];
+let set=[],idx=0,score=0,wrong=[],mode='mcq';
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function start(list){ if(!list.length)return; set=list; idx=0; score=0; wrong=[]; $('#quizHome').style.display='none'; $('#quizEnd').style.display='none'; $('#quizRun').style.display='block'; show(); window.scrollTo(0,0); }
-$('#startBtn').onclick=()=>{ const t=$('#qTopic').value, n=$('#qCount').value; let pool=MCQ.map((q,i)=>Object.assign({},q,{id:i})).filter(q=>t==='All topics'||q.t===t); pool=shuffle(pool); if(n!=='all')pool=pool.slice(0,+n); start(pool); };
-$('#wrongBtn').onclick=()=>{ start(shuffle(store.wrong.filter(i=>MCQ[i]).map(i=>Object.assign({},MCQ[i],{id:i})))); };
+$('#startBtn').onclick=()=>{ mode=$('#qMode').value; const t=$('#qTopic').value, n=$('#qCount').value; let pool=MCQ.map((q,i)=>Object.assign({},q,{id:i})).filter(q=>t==='All topics'||q.t===t); pool=shuffle(pool); if(n!=='all')pool=pool.slice(0,+n); start(pool); };
+$('#wrongBtn').onclick=()=>{ mode=$('#qMode').value; start(shuffle(store.wrong.filter(i=>MCQ[i]).map(i=>Object.assign({},MCQ[i],{id:i})))); };
 function show(){ const q=set[idx]; $('#qNum').textContent='Question '+(idx+1)+' / '+set.length; $('#qScore').textContent='Score '+score; $('#qProg').style.width=(100*idx/set.length)+'%'; $('#qText').textContent=q.q; $('#qExp').className='exp'; $('#nextBtn').style.display='none';
+  if(mode==='recall'){ $('#qOpts').innerHTML=''; $('#qRecall').style.display='block'; $('#revealBtn').style.display='block'; $('#qAns').style.display='none'; $('#selfMark').style.display='none'; return; }
+  $('#qRecall').style.display='none';
   const L='ABCD'; $('#qOpts').innerHTML=q.o.map((o,i)=>'<button class="opt" data-i="'+i+'"><span class="l">'+L[i]+'</span>'+o+'</button>').join(''); }
+$('#revealBtn').onclick=()=>{ const q=set[idx]; $('#revealBtn').style.display='none'; $('#qAns').innerHTML='<b>'+q.o[q.a]+'</b>'+(q.e?'<br><span style="font-weight:400">'+q.e+'</span>':''); $('#qAns').style.display='block'; $('#selfMark').style.display='flex'; };
+function mark(ok){ const q=set[idx]; store.total++; if(ok){score++;store.correct++;store.wrong=store.wrong.filter(x=>x!==q.id);} else {wrong.push(q); if(!store.wrong.includes(q.id))store.wrong.push(q.id);} save(); $('#selfMark').style.display='none'; $('#qScore').textContent='Score '+score; $('#nextBtn').style.display='block'; $('#nextBtn').textContent=idx+1<set.length?'Next →':'See result'; }
+$('#gotBtn').onclick=()=>mark(true); $('#missBtn').onclick=()=>mark(false);
 $('#qOpts').onclick=e=>{ const b=e.target.closest('.opt'); if(!b||b.disabled)return; const q=set[idx], i=+b.dataset.i; $$('.opt').forEach(x=>x.disabled=true); $$('.opt')[q.a].classList.add('ok'); store.total++;
   if(i===q.a){score++;store.correct++;b.classList.add('ok');$('#qExp').className='exp ok';$('#qExp').innerHTML='✅ Correct. '+(q.e||''); store.wrong=store.wrong.filter(x=>x!==q.id);}
   else{b.classList.add('bad');$('#qExp').className='exp bad';$('#qExp').innerHTML='❌ Answer: <b>'+q.o[q.a]+'</b>. '+(q.e||''); wrong.push(q); if(!store.wrong.includes(q.id))store.wrong.push(q.id);}
